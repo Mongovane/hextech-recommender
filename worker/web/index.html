@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>海克斯大乱斗 · 最优推荐</title>
+<style>
+:root{--bg:#050b14;--panel:#0b1626;--line:#173049;--txt:#e6f1f7;--mut:#7f97a8;--cy:#19d3e6;--gold:#f0c35a;--up:#3ddc97;--down:#ff6b7a;--hex:polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0 50%)}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;color:var(--txt);font:14px/1.5 system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;min-height:100vh;
+background:radial-gradient(900px 500px at 85% -10%,#0d3a52 0,transparent 60%),radial-gradient(700px 400px at -10% 30%,#2a1d4d 0,transparent 55%),var(--bg)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.07;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='98'%3E%3Cpath d='M28 2l26 15v30L28 62 2 47V17zM28 62v34M2 47L2 80M54 47v33' fill='none' stroke='%2319d3e6' stroke-width='1'/%3E%3C/svg%3E")}
+.wrap{position:relative;max-width:980px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.logo{width:44px;height:48px;clip-path:var(--hex);background:linear-gradient(135deg,var(--cy),var(--gold));display:grid;place-items:center;color:#041018;font-weight:900;font-size:20px}
+h1{font-size:22px;margin:0;letter-spacing:2px}
+h1 small{display:block;font-size:11px;color:var(--mut);letter-spacing:3px;font-weight:400}
+#version{margin-left:auto}
+select,input{background:#08111e;border:1px solid var(--line);color:var(--txt);padding:10px 12px;border-radius:8px;font:inherit;outline:none;transition:.15s}
+input{width:100%}
+input:focus,select:focus{border-color:var(--cy);box-shadow:0 0 0 3px #19d3e622}
+.step{display:flex;align-items:center;gap:10px;margin:26px 0 10px;color:var(--mut);font-size:12px;letter-spacing:2px;text-transform:uppercase}
+.step b{width:22px;height:24px;clip-path:var(--hex);background:var(--cy);color:#041018;display:grid;place-items:center;font-size:12px}
+.step:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+.panel{background:linear-gradient(180deg,#0d1b2e,var(--panel));border:1px solid var(--line);border-radius:14px;padding:16px}
+.field{position:relative}
+.drop{position:absolute;top:100%;left:0;right:0;margin-top:6px;background:#0c1a2c;border:1px solid var(--cy);border-radius:10px;max-height:300px;overflow:auto;z-index:20;display:none;box-shadow:0 14px 40px #000a}
+.drop.open{display:block}
+.opt{padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;gap:8px}
+.opt.on,.opt:hover{background:#12304a}
+.opt small{color:var(--mut);white-space:nowrap}
+.tier{font-size:10px;padding:1px 6px;border-radius:4px;background:#1b3550;margin-left:6px;vertical-align:middle}
+.tier.T0{background:#8b3dff}.tier.T1{background:#1f7bff}
+.champ{display:flex;gap:16px;align-items:flex-start;margin-top:12px}
+.mono{flex:none;width:76px;height:84px;clip-path:var(--hex);background:linear-gradient(160deg,var(--cy),#6a35ff);display:grid;place-items:center;font-size:32px;font-weight:900;color:#fff}
+.champ h2{margin:0;font-size:20px}
+.stat{color:var(--mut);font-size:12px}
+.pills,.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.pill{font-size:12px;padding:3px 9px;border-radius:999px;border:1px solid var(--line);background:#0a1524}
+.pill.up{color:var(--up);border-color:#3ddc9755}.pill.down{color:var(--down);border-color:#ff6b7a55}
+.chip{font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:#0a1524;color:var(--txt);cursor:pointer;transition:.15s}
+.chip:hover{border-color:var(--cy);color:var(--cy)}
+.chip small{color:var(--mut);margin-left:4px}
+.shot img{max-width:100%;border-radius:8px;margin-top:10px;display:none;border:1px solid var(--line)}
+.btn{border:0;border-radius:10px;padding:11px 20px;font:inherit;font-weight:700;cursor:pointer;color:#041018;background:linear-gradient(135deg,var(--cy),#5fe8c0);transition:.15s}
+.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn:disabled{opacity:.45;transform:none;cursor:wait}
+.btn.gold{background:linear-gradient(135deg,var(--gold),#ff9d4a)}
+.btn.ghost{background:#0a1524;color:var(--txt);border:1px solid var(--line)}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.slot{position:relative;padding:12px;border-radius:14px;border:1px solid var(--line);background:#08111e}
+.slot i{position:absolute;top:-10px;left:12px;font-style:normal;font-size:11px;font-weight:800;padding:1px 9px;border-radius:99px;background:var(--cy);color:#041018}
+.cta{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.cta .btn.main{flex:1;font-size:16px;padding:14px}
+.results{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px}
+.rc{position:relative;padding:18px 14px 14px;border-radius:16px;border:1px solid var(--line);background:linear-gradient(180deg,#0e1d31,#09121f);animation:in .4s both}
+.rc.pick{border-color:var(--gold);background:linear-gradient(180deg,#2a2210,#0d1522 70%);box-shadow:0 0 0 1px #f0c35a55,0 0 40px #f0c35a33;transform:translateY(-6px)}
+.rc .rank{position:absolute;top:-12px;left:14px;width:28px;height:30px;clip-path:var(--hex);background:#173049;display:grid;place-items:center;font-weight:800;font-size:13px}
+.rc.pick .rank{background:var(--gold);color:#241a02}
+.crown{position:absolute;top:-16px;right:12px;font-size:22px}
+.rc h3{margin:6px 0 2px;font-size:17px}
+.big{font-size:30px;font-weight:900;color:var(--cy);letter-spacing:-1px}
+.rc.pick .big{color:var(--gold)}
+.bar{height:6px;border-radius:3px;background:#12263b;margin:10px 0 6px;overflow:hidden}
+.fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--cy),#6a35ff);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.rc.pick .fill{background:linear-gradient(90deg,var(--gold),#ff9d4a)}
+.rc .btn{width:100%;margin-top:10px;padding:8px;font-size:13px}
+.warn{margin-top:14px;padding:10px 14px;border-radius:10px;background:#3a141b;border:1px solid #ff6b7a66;color:#ffb3bb;font-size:13px}
+.meta{margin-top:12px;color:var(--mut);font-size:12px}
+.badge{display:inline-block;padding:1px 8px;border-radius:99px;font-size:11px;margin-right:6px;background:#12304a;color:var(--cy)}
+.badge.local{background:#3a2d10;color:var(--gold)}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);background:#12304a;border:1px solid var(--cy);padding:10px 18px;border-radius:99px;transition:.3s;z-index:50}
+#toast.show{transform:translateX(-50%)}
+.rail{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+@keyframes in{from{opacity:0;transform:translateY(14px)}}
+@media(max-width:720px){.slots,.results{grid-template-columns:1fr}.rc.pick{transform:none}.champ{flex-direction:column}}
+
+.opt{align-items:center}.opt>span{flex:1}
+.oic{width:24px;height:24px;border-radius:5px;flex:none}.cic{width:18px;height:18px;border-radius:4px;flex:none}.ric{width:34px;height:34px;border-radius:8px;flex:none}
+.mono img{width:100%;height:100%;object-fit:cover;display:block}.mono{overflow:hidden;filter:drop-shadow(0 0 14px #19d3e688)}
+.chip{display:inline-flex;align-items:center;gap:6px}
+.rc h3{display:flex;align-items:center;gap:8px}
+.ctrl{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:16px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{background:#08111e;color:var(--mut);border:0;padding:8px 14px;font:inherit;cursor:pointer;transition:.2s}
+.seg button.on{background:linear-gradient(135deg,var(--cy),#5fe8c0);color:#041018;font-weight:700}
+.sw{display:flex;gap:8px;align-items:center;color:var(--mut);cursor:pointer;font-size:13px}.sw input{width:auto;accent-color:var(--cy)}.sw em{font-style:normal;color:var(--cy)}
+.bg{position:fixed;inset:0;overflow:hidden;pointer-events:none}
+.bg i{position:absolute;bottom:-120px;background:linear-gradient(#19d3e61f,#6a35ff10);clip-path:var(--hex);animation:rise linear infinite}
+@keyframes rise{to{transform:translateY(-125vh) rotate(60deg)}}
+.rc{transition:transform .15s ease-out,box-shadow .3s;transform-style:preserve-3d}
+.rc:before{content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;background:radial-gradient(240px circle at var(--mx,50%) var(--my,0),#ffffff16,transparent 60%)}
+@property --a{syntax:'<angle>';initial-value:0deg;inherits:false}
+.rc.pick:after{content:"";position:absolute;inset:-2px;border-radius:18px;padding:2px;pointer-events:none;background:conic-gradient(from var(--a),transparent 0 65%,var(--gold),#fff,var(--gold),transparent);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spin 3s linear infinite}
+@keyframes spin{to{--a:360deg}}
+.crown{animation:bob 1.6s ease-in-out infinite}@keyframes bob{50%{transform:translateY(-5px) rotate(8deg)}}
+.rc.nodata{opacity:.85}.tag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:99px;background:#3a2d10;color:var(--gold);margin-top:4px}
+.rc.sk{height:210px;background:linear-gradient(100deg,#0e1d31 30%,#18334f 50%,#0e1d31 70%);background-size:200% 100%;animation:sh 1.1s linear infinite}
+@keyframes sh{to{background-position:-200% 0}}
+.spark{position:fixed;width:9px;height:10px;clip-path:var(--hex);background:var(--gold);pointer-events:none;z-index:60;animation:sp 1s ease-out forwards}
+@keyframes sp{to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
+
+.ico{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em;flex:none}
+.btn,.seg button{display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.logo .ico{width:26px;height:26px;stroke:#041018}
+.shot .ico{width:30px;height:30px;color:var(--cy);display:block;margin:0 auto 6px}
+.crown{line-height:0}.crown .ico{width:26px;height:26px;color:var(--gold);filter:drop-shadow(0 0 6px #f0c35a99)}
+.pill .ico{width:13px;height:13px;vertical-align:-2px}
+.chip small .ico{width:11px;height:11px}
+.warn{display:flex;gap:8px;align-items:center}.warn .ico{color:var(--down);width:18px;height:18px}
+.mark .ico{width:15px;height:15px}
+
+.shot{display:block;position:relative;overflow:hidden;text-align:center;cursor:pointer;padding:30px 20px;border-radius:14px;border:1px solid var(--line);
+background:radial-gradient(420px 140px at 50% 0,#0f3350 0,transparent 70%),linear-gradient(180deg,#0a1a2c,#08111e);transition:.25s}
+.shot:before{content:"";position:absolute;inset:9px;pointer-events:none;opacity:.5;transition:.25s;border-radius:6px;background:
+linear-gradient(var(--cy),var(--cy)) 0 0/18px 2px,linear-gradient(var(--cy),var(--cy)) 0 0/2px 18px,
+linear-gradient(var(--cy),var(--cy)) 100% 0/18px 2px,linear-gradient(var(--cy),var(--cy)) 100% 0/2px 18px,
+linear-gradient(var(--cy),var(--cy)) 0 100%/18px 2px,linear-gradient(var(--cy),var(--cy)) 0 100%/2px 18px,
+linear-gradient(var(--cy),var(--cy)) 100% 100%/18px 2px,linear-gradient(var(--cy),var(--cy)) 100% 100%/2px 18px;background-repeat:no-repeat}
+.shot:after{content:"";position:absolute;left:0;right:0;top:0;height:60px;pointer-events:none;opacity:0;background:linear-gradient(180deg,transparent,#19d3e61f 70%,#19d3e680)}
+.shot:hover,.shot.over{border-color:#19d3e688;box-shadow:0 0 30px #19d3e620 inset}
+.shot:hover:before,.shot.over:before{inset:5px;opacity:1}
+.shot:hover:after,.shot.over:after{opacity:1;animation:scan 1.8s linear infinite}
+@keyframes scan{from{transform:translateY(-60px)}to{transform:translateY(240px)}}
+.shot img{max-height:240px;margin:14px auto 0}
+.cands{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;align-items:center}.cands .stat{width:100%}
+.cc{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:12px;border:1px solid var(--line);background:#0a1524;font-size:13px;transition:.25s;animation:in .3s both}
+.cc img{width:26px;height:26px;border-radius:6px}.cc b{color:var(--cy)}.cc small{color:var(--mut)}
+.cc.best{border-color:var(--gold);background:linear-gradient(135deg,#2a2210,#0a1524);box-shadow:0 0 18px #f0c35a40}
+.cc.best b,.cc.best .ico{color:var(--gold)}.cc.nd{opacity:.8}.cc.bad{border-color:#ff6b7a66;color:var(--down)}
+.seg button:disabled{opacity:.4;cursor:not-allowed}
+.warn.deg{margin:0 0 14px;background:#2d2410;border-color:#f0c35a66;color:var(--gold)}.warn.deg .ico{color:var(--gold)}
+
+.chip.tgl{color:var(--mut)}.chip.tgl.on{border-color:var(--cy);color:var(--cy);background:#0c2a3c}
+.chip em{font-style:normal;color:var(--mut);margin-left:2px}.chip.tgl.on em{color:var(--cy)}
+.chip .ico{width:14px;height:14px}
+.capbox{display:none;margin-top:12px}.capbox.on{display:block}
+.capbox video{width:100%;max-height:200px;border-radius:10px;border:1px solid var(--line);background:#000;object-fit:contain}
+.pip .pipbox{padding:12px;display:grid;gap:8px}.pip .pipbox .btn{width:100%}
+</style>
+</head>
+<body>
+<div class="bg" id="bg"></div>
+<div class="wrap">
+<header>
+  <div class="logo"><i data-i="swords"></i></div>
+  <h1>HEXTECH 推荐官<small>海克斯大乱斗 · 三选一决策</small></h1>
+  <select id="version"></select>
+</header>
+<div id="draftBanner" class="panel" style="display:none;margin-bottom:10px"></div>
+
+<div class="step"><b>1</b>选择英雄</div>
+<div class="panel">
+  <div class="field"><input id="champInput" placeholder="搜索英雄：亚索 / yasuo / ys" autocomplete="off"><div id="champDrop" class="drop"></div></div>
+  <div id="champCard"></div>
+</div>
+
+<div class="step"><b>2</b>本局已选（参与协同评估）</div>
+<div class="rail" id="pickedChips"></div>
+
+<div class="step"><b>3</b>输入三选一</div>
+<div class="panel">
+  <label class="shot" id="shot" for="shotInput">
+    <div><i data-i="camera"></i>拖入 / 点击上传 / <b>Ctrl+V 粘贴</b>三选一截图</div>
+    <div class="stat">自动识别三张卡并推荐（需 Worker 配置 AI binding）</div>
+    <img id="shotPreview">
+  </label>
+  <input type="file" id="shotInput" accept="image/*" hidden>
+  <div class="capbox" id="capBox"><video id="capVideo" muted playsinline></video></div>
+  <div class="cta" style="margin:12px 0 6px"><button class="btn ghost" id="capStart"><i data-i="monitor"></i>选择游戏窗口</button><button class="btn" id="capGo"><i data-i="scan-line"></i>截取并识别</button><button class="btn ghost" id="capStop" disabled><i data-i="x"></i>停止共享</button><button class="btn ghost" id="pipBtn"><i data-i="picture-in-picture-2"></i>悬浮窗</button>
+    <select id="cropSel"><option value="full">裁剪：整个画面</option><option value="band" selected>裁剪：中部横带</option><option value="center">裁剪：中央</option></select></div>
+  <div class="stat" style="margin-bottom:8px">先点「选择游戏窗口」授权一次，之后可在悬浮窗里一键截取。游戏需为无边框 / 窗口化，独占全屏浏览器抓不到。</div>
+  <div class="cta" style="margin:6px 0 22px"><button class="btn gold" id="ocrGo">识别并推荐</button><span class="stat" id="ocrMsg" style="align-self:center"></span></div>
+  <div class="ctrl"><div class="seg" id="seg"><button data-m="auto" class="on"><i data-i="brain-circuit"></i>智能（jev）</button><button data-m="wr"><i data-i="chart-column"></i>纯胜率排序</button></div>
+    <button class="chip tgl on" id="onlyOk" type="button"><i data-i="list-filter"></i>仅显示该英雄可选海克斯<em id="okCnt"></em></button></div>
+  <div class="slots">
+    <div class="slot"><i>A</i><div class="field"><input id="aug0" placeholder="海克斯 1" autocomplete="off"><div id="drop0" class="drop"></div></div></div>
+    <div class="slot"><i>B</i><div class="field"><input id="aug1" placeholder="海克斯 2" autocomplete="off"><div id="drop1" class="drop"></div></div></div>
+    <div class="slot"><i>C</i><div class="field"><input id="aug2" placeholder="海克斯 3" autocomplete="off"><div id="drop2" class="drop"></div></div></div>
+  </div>
+  <div class="cands" id="cands"></div>
+  <div class="cta"><button class="btn main" id="go"><i data-i="zap"></i>推荐最优</button><button class="btn ghost" id="clearSlots">清空</button></div>
+</div>
+
+<div class="step"><b>4</b>推荐结果</div>
+<div id="out"><div class="stat">选好英雄和候选后，结果会出现在这里。</div></div>
+</div>
+<div id="toast"></div>
+
+<script>
+const ICONS = {"brain-circuit": "<path d=\"M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z\" /> <path d=\"M9 13a4.5 4.5 0 0 0 3-4\" /> <path d=\"M6.003 5.125A3 3 0 0 0 6.401 6.5\" /> <path d=\"M3.477 10.896a4 4 0 0 1 .585-.396\" /> <path d=\"M6 18a4 4 0 0 1-1.967-.516\" /> <path d=\"M12 13h4\" /> <path d=\"M12 18h6a2 2 0 0 1 2 2v1\" /> <path d=\"M12 8h8\" /> <path d=\"M16 8V5a2 2 0 0 1 2-2\" /> <circle cx=\"16\" cy=\"13\" r=\".5\" /> <circle cx=\"18\" cy=\"3\" r=\".5\" /> <circle cx=\"20\" cy=\"21\" r=\".5\" /> <circle cx=\"20\" cy=\"8\" r=\".5\" />", "chart-column": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"M18 17V9\" /> <path d=\"M13 17V5\" /> <path d=\"M8 17v-3\" />", "camera": "<path d=\"M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z\" /> <circle cx=\"12\" cy=\"13\" r=\"3\" />", "zap": "<path d=\"M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z\" />", "crown": "<path d=\"M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z\" /> <path d=\"M5 21h14\" />", "check": "<path d=\"M20 6 9 17l-5-5\" />", "triangle-alert": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "x": "<path d=\"M18 6 6 18\" /> <path d=\"m6 6 12 12\" />", "swords": "<path d=\"m13 19 6-6\" /> <path d=\"M14.5 17.5 3.586 6.586A2 2 0 013 5.172V3h2.172a2 2 0 011.414.586L17.5 14.5\" /> <path d=\"m14.828 6.172 2.586-2.586A2 2 0 0118.828 3H21v2.172a2 2 0 01-.586 1.414l-2.586 2.586\" /> <path d=\"m16 16 4 4\" /> <path d=\"m19 21 2-2\" /> <path d=\"m5 14 4 4\" /> <path d=\"m5 21-2-2\" /> <path d=\"M7.5 16.5 4 20\" />", "trending-up": "<path d=\"M16 7h6v6\" /> <path d=\"m22 7-8.5 8.5-5-5L2 17\" />", "trending-down": "<path d=\"M16 17h6v-6\" /> <path d=\"m22 17-8.5-8.5-5 5L2 7\" />", "minus": "<path d=\"M5 12h14\" />", "arrow-right": "<path d=\"M5 12h14\" /> <path d=\"m12 5 7 7-7 7\" />"};
+Object.assign(ICONS, {"monitor": "<rect width=\"20\" height=\"14\" x=\"2\" y=\"3\" rx=\"2\" /> <line x1=\"8\" x2=\"16\" y1=\"21\" y2=\"21\" /> <line x1=\"12\" x2=\"12\" y1=\"17\" y2=\"21\" />", "scan-line": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <path d=\"M7 12h10\" />", "picture-in-picture-2": "<path d=\"M21 9V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h4\" /> <rect width=\"10\" height=\"7\" x=\"12\" y=\"13\" rx=\"2\" />", "list-filter": "<path d=\"M2 5h20\" /> <path d=\"M6 12h12\" /> <path d=\"M9 19h6\" />"});
+const ic = n => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n] || ''}</svg>`;
+const hydrate = root => (root || document).querySelectorAll('i[data-i]').forEach(e => e.outerHTML = ic(e.dataset.i));
+const $ = id => document.getElementById(id);
+const S = { version: null, champions: [], augments: [], picked: [], seq: 0, augWr: new Map(), stat: { jev: true, ocr: true }, mode: 'auto', only: true, allowed: new Set() };
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pct = (x, d = 1) => (x * 100).toFixed(d) + '%';
+const fmtGames = n => n == null ? '' : n >= 10000 ? (n / 10000).toFixed(1) + '万场' : n.toLocaleString() + '场';
+function toast(t) { if (S.pipMsg) S.pipMsg.textContent = t; const e = $('toast'); e.textContent = t; e.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove('show'), 2200); }
+
+const _PB='阿八嚓哒妸发旮哈讥咔垃妈拏噢妑七呥扨它穵夕丫帀',_PL='abcdefghjklmnopqrstwxyz',_CO=new Intl.Collator('zh-Hans-CN');
+const _pc=c=>{if(/[a-zA-Z]/.test(c))return c.toLowerCase();if(c<'\u4e00'||c>'\u9fff')return '';let r=-1;for(let i=0;i<_PB.length;i++){if(_CO.compare(_PB[i],c)<=0)r=i;else break}return r<0?'':_PL[r]};
+const pyOf = s => [...String(s || '')].map(_pc).join('');
+const withPy = items => (items.forEach(x => { x._py = pyOf(x.name) + ' ' + pyOf(x.title || ''); }), items);
+
+const TOKEN = new URLSearchParams(location.search).get('token') || '';
+async function api(p, opts = {}) {
+  if (TOKEN) opts.headers = { ...(opts.headers || {}), 'X-Token': TOKEN };
+  const r = await fetch(p, opts);
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(d.error || r.status);
+  return d;
+}
+
+// ---------- autocomplete（支持 ↑↓ 回车） ----------
+function autocomplete(inputId, dropId, getSource, onPick) {
+  const input = $(inputId), drop = $(dropId);
+  let hits = [], idx = -1;
+  const close = () => { drop.classList.remove('open'); idx = -1; };
+  const paint = () => [...drop.children].forEach((c, i) => c.classList.toggle('on', i === idx));
+  const pick = h => { input.value = h.name; close(); onPick(h); };
+  input.addEventListener('input', () => {
+    const raw = input.value.trim(), q = raw.toLowerCase(), qp = q.replace(/\s+/g, '');
+    if (!q) return close();
+    hits = getSource().filter(x => x.name.toLowerCase().includes(q) || (x.title && x.title.includes(raw)) ||
+      (x.alias && x.alias.toLowerCase().includes(q)) || (x._py && x._py.includes(qp)))
+      .map(x => ({ x, r: (x.name.toLowerCase().startsWith(q) || (x.title && x.title.startsWith(raw))) ? 0 : (x._py && x._py.split(' ').some(w => w.startsWith(qp))) ? 1 : 2 }))
+      .sort((a, b) => a.r - b.r).slice(0, 8).map(o => o.x);
+    drop.innerHTML = '';
+    hits.forEach(h => {
+      const d = document.createElement('div');
+      d.className = 'opt';
+      d.innerHTML = `${h.icon ? `<img class="oic" src="${esc(h.icon)}" alt="" onerror="this.remove()">` : ''}<span>${esc(h.name)}${h.title ? ' · ' + esc(h.title) : ''}${h.tier ? `<span class="tier ${esc(h.tier)}">${esc(h.tier)}</span>` : ''}</span>` +
+        (h.wr ? `<small>${pct(h.wr)}${h.tm ? ' · ' + fmtGames(h.tm) : ''}</small>` : '');
+      d.onmousedown = e => { e.preventDefault(); pick(h); };
+      drop.appendChild(d);
+    });
+    idx = hits.length ? 0 : -1; paint();
+    drop.classList.toggle('open', hits.length > 0);
+  });
+  input.addEventListener('keydown', e => {
+    if (!drop.classList.contains('open')) return;
+    if (e.key === 'ArrowDown') { idx = (idx + 1) % hits.length; paint(); e.preventDefault(); }
+    else if (e.key === 'ArrowUp') { idx = (idx - 1 + hits.length) % hits.length; paint(); e.preventDefault(); }
+    else if (e.key === 'Enter' && idx >= 0) { pick(hits[idx]); e.preventDefault(); }
+    else if (e.key === 'Escape') close();
+  });
+  input.addEventListener('blur', () => setTimeout(close, 120));
+}
+
+// ---------- 英雄 ----------
+function renderChampCard(d) {
+  const c = d.champion; S.allowed = new Set(d.augIds || []); updateFilterLabel(); S.augWr = new Map((d.augWr || []).map(([id, wr, tm]) => [id, { wr, tm }])); renderCands();
+  const mono = c.icon ? `<img src="${esc(c.icon)}" alt="" onerror="this.remove()">` : esc([...c.name][0]);
+  const buffs = d.buffs.length
+    ? d.buffs.map(b => `<span class="pill ${b.tone === 'up' ? 'up' : b.tone === 'down' ? 'down' : ''}">${esc(b.label)} ${esc(b.value)} ${ic(b.tone === 'up' ? 'trending-up' : b.tone === 'down' ? 'trending-down' : 'minus')}</span>`).join('')
+    : '<span class="stat">本版本无平衡性调整</span>';
+  const tops = d.topAugments.map(a => `<button class="chip aug-fill" data-name="${esc(a.name)}">${a.icon ? `<img class="cic" src="${esc(a.icon)}" alt="" onerror="this.remove()">` : ''}${esc(a.name)}<small>${pct(a.wr)}</small></button>`).join('');
+  $('champCard').innerHTML = `<div class="champ"><div class="mono">${mono}</div><div style="flex:1">
+    <h2>${esc(c.name)} · ${esc(c.title)}<span class="tier ${esc(c.tier)}">${esc(c.tier)}</span></h2>
+    <div class="stat">胜率 ${pct(c.wr, 2)} · ${c.tm.toLocaleString()} 场</div>
+    <div class="pills">${buffs}</div>
+    <div class="stat" style="margin-top:12px">该英雄常用海克斯（仅快捷填入，不限制候选范围）</div><div class="chips" id="topSort"></div><div class="chips" id="tops"></div></div></div>`;
+  renderTops();
+  $('champCard').querySelectorAll('.aug-fill').forEach(b => {
+    b.onclick = () => { for (let i = 0; i < 3; i++) if (!$('aug' + i).value) { $('aug' + i).value = b.dataset.name; renderCands(); return; } toast('三个位置已满'); };
+  });
+}
+async function selectChampion(h) {
+  const my = ++S.seq;
+  $('champInput').value = h.name;
+  $('champCard').innerHTML = '<div class="stat" style="margin-top:10px">加载中…</div>';
+  try {
+    const d = await api(`/api/champion-detail?name=${encodeURIComponent(h.name)}&version=${encodeURIComponent(S.version)}`);
+    if (my === S.seq) renderChampCard(d);
+  } catch (e) { if (my === S.seq) $('champCard').innerHTML = `<div class="stat">加载失败：${esc(e.message)}</div>`; }
+}
+
+// ---------- 已选 ----------
+function renderPicked() {
+  const el = $('pickedChips');
+  el.innerHTML = (S.picked.length
+    ? S.picked.map((n, i) => `<button class="chip pk" data-i="${i}">${esc(n)}<small>${ic('x')}</small></button>`).join('') + '<button class="chip pkclear">清空</button>'
+    : '<span class="stat">暂无 — 在推荐结果里点「选它」，下一轮会参与协同评估</span>');
+  el.querySelectorAll('.pk').forEach(b => b.onclick = () => { S.picked.splice(+b.dataset.i, 1); renderPicked(); });
+  const c = el.querySelector('.pkclear'); if (c) c.onclick = () => { S.picked = []; renderPicked(); }; renderCands();
+}
+
+// ---------- 结果 ----------
+function renderResult(d) {
+  const cards = d.ranking.map((r, i) => {
+    const isPick = r.name === d.pick;
+    const hasWr = r.champWr != null;
+    const eff = r.eff != null ? r.eff : (hasWr ? r.champWr : r.globalWr);
+    const w = r.score != null ? Math.min(100, r.score / 4 * 100) : Math.max(4, Math.min(100, (eff - 0.4) / 0.2 * 100));
+    const icon = (S.augIcon || {})[r.name];
+    const raw = hasWr ? `原始 ${pct(r.champWr)}${r.champTm ? ' · ' + fmtGames(r.champTm) : ''}` : `全局 ${pct(r.globalWr)}`;
+    return `<div class="rc${isPick ? ' pick' : ''}${hasWr ? '' : ' nodata'}" style="animation-delay:${i * .1}s"><div class="rank">${i + 1}</div>${isPick ? `<div class="crown">${ic('crown')}</div>` : ''}
+      <h3>${icon ? `<img class="ric" src="${esc(icon)}" alt="" onerror="this.remove()">` : ''}${esc(r.name)}</h3>
+      <div class="big" data-count="${(eff * 100).toFixed(1)}">${pct(eff)}</div>
+      <div class="stat">修正胜率 · ${raw}</div>${hasWr ? '' : '<div class="tag">该英雄无对局数据</div>'}
+      <div class="bar"><div class="fill" style="width:0" data-w="${w}"></div></div>
+      <div class="stat">${r.score != null ? 'jev 评分 ' + r.score.toFixed(2) + ' / 4' : '胜率相对强度'}</div>
+      <button class="btn ${isPick ? 'gold' : 'ghost'} mark" data-name="${esc(r.name)}">${ic('check')}选它</button></div>`;
+  }).join('');
+  const warn = d.conflictProb != null && d.conflictProb >= 0.5
+    ? `<div class="warn">${ic('triangle-alert')}<span>jev 认为所选海克斯与英雄定位可能冲突（${(d.conflictProb * 100).toFixed(0)}%），请谨慎</span></div>` : '';
+  const meta = `<div class="meta"><span class="badge ${d.source === 'jev' ? '' : 'local'}">${d.source === 'jev' ? 'jev 决策' : d.source === 'win-rate' ? '纯胜率排序' : '本地规则'}</span>` +
+    (d.confidence != null ? `置信度 ${Number(d.confidence).toFixed(2)} · ` : '') + `版本 ${esc(d.version)}` +
+    (d.jevError ? ` · jev 不可用：${esc(d.jevError)}` : '') + (S.picked.length ? ` · 已考虑：${esc(S.picked.join('、'))}` : '') + '</div>';
+  const DEG = { 'no-key': 'jev 未配置，已降档为纯胜率排序', 'jev-error': 'jev 调用失败，已降档为纯胜率排序', 'low-confidence': 'jev 置信度不足，已降档为纯胜率排序', conflict: 'jev 判定最优项与英雄定位冲突，已降档为纯胜率排序' };
+  const deg = d.degraded ? `<div class="warn deg">${ic('triangle-alert')}<span>${DEG[d.degraded] || '已降档为纯胜率排序'}</span></div>` : '';
+  return `${deg}<div class="results">${cards}</div>${warn}${meta}`;
+}
+function showResult(html, target = $('out')) {
+  target.innerHTML = html;
+  requestAnimationFrame(() => { target.querySelectorAll('.fill').forEach(f => f.style.width = f.dataset.w + '%'); fx(target); });
+  target.querySelectorAll('.mark').forEach(b => b.onclick = () => {
+    const n = b.dataset.name;
+    if (!S.picked.includes(n)) S.picked.push(n);
+    renderPicked();
+    [0, 1, 2].forEach(i => $('aug' + i).value = ''); renderCands();
+    $('out').innerHTML = `<div class="stat">已记录「${esc(n)}」，输入下一轮候选继续。</div>`;
+    toast('已记入本局已选'); window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+// ---------- 截图 ----------
+let shotDataUrl = null;
+function handleShot(file) {
+  if (!file || !file.type.startsWith('image/')) return;
+  const img = new Image();
+  img.onload = () => {
+    const sc = Math.min(1, 1280 / img.width), cv = document.createElement('canvas');
+    cv.width = Math.round(img.width * sc); cv.height = Math.round(img.height * sc);
+    cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+    shotDataUrl = cv.toDataURL('image/jpeg', 0.72);
+    const pv = $('shotPreview'); pv.src = shotDataUrl; pv.style.display = 'block';
+    URL.revokeObjectURL(img.src); $('ocrMsg').textContent = '';
+  };
+  img.src = URL.createObjectURL(file);
+}
+$('shotInput').onchange = e => handleShot(e.target.files[0]);
+document.addEventListener('paste', e => { const f = [...(e.clipboardData?.files || [])].find(f => f.type.startsWith('image/')); if (f) handleShot(f); });
+const shot = $('shot');
+['dragenter', 'dragover'].forEach(t => shot.addEventListener(t, e => { e.preventDefault(); shot.classList.add('over'); }));
+['dragleave', 'drop'].forEach(t => shot.addEventListener(t, e => { e.preventDefault(); shot.classList.remove('over'); }));
+shot.addEventListener('drop', e => handleShot(e.dataTransfer.files[0]));
+
+$('ocrGo').onclick = async () => {
+  const champ = $('champInput').value.trim();
+  if (!champ) return toast('请先选英雄');
+  if (!shotDataUrl) return toast('请先上传或粘贴截图');
+  const btn = $('ocrGo'); btn.disabled = true; btn.textContent = '识别中…'; skeleton();
+  try {
+    const d = await api('/api/ocr-recommend', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ champion: champ, image: shotDataUrl, version: S.version, picked: S.picked, mode: S.mode }) });
+    d.cards.forEach((c, i) => { if (c.matched) $('aug' + i).value = c.matched; }); renderCands();
+    $('ocrMsg').innerHTML = d.cards.map(c => { const ic = c.matched && (S.augIcon || {})[c.matched]; return `${ic ? `<img class="cic" src="${esc(ic)}" alt="" onerror="this.remove()"> ` : ''}${esc(c.ocr || '?')}${ic('arrow-right')}<b>${esc(c.matched || '未匹配')}</b>`; }).join(' ｜ ');
+    showResult(renderResult(d.recommend)); pipNotify(d.recommend);
+  } catch (e) {
+    const msg = /AI binding/.test(e.message) ? 'Worker 未配置 AI binding（dashboard → Settings → Bindings → 添加 AI）' : e.message;
+    $('ocrMsg').innerHTML = `<span style="color:var(--down)">识别失败：${esc(msg)}</span>`; if (S.pipMsg) S.pipMsg.textContent = '识别失败：' + msg;
+  }
+  btn.disabled = false; btn.textContent = '识别并推荐';
+};
+
+// ---------- 推荐 ----------
+$('clearSlots').onclick = () => { [0, 1, 2].forEach(i => $('aug' + i).value = ''); renderCands(); };
+$('go').onclick = async () => {
+  const btn = $('go'), champ = $('champInput').value.trim();
+  const augs = [0, 1, 2].map(i => $('aug' + i).value.trim()).filter(Boolean);
+  if (!champ || augs.length < 2) return toast('请先选英雄和至少 2 个海克斯');
+  btn.disabled = true; btn.textContent = '计算中…'; skeleton();
+  try {
+    const d = await api('/api/recommend', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ champion: champ, augments: augs, version: S.version, picked: S.picked, mode: S.mode }) });
+    showResult(renderResult(d));
+  } catch (e) { $('out').innerHTML = `<div class="warn">请求失败：${esc(e.message)}</div>`; }
+  btn.disabled = false; btn.innerHTML = ic('zap') + '推荐最优';
+};
+
+// ---------- 初始化 ----------
+async function init() {
+  try { S.stat = await api('/api/status'); } catch {}
+  applyStatus();
+  const vs = await api('/api/versions'), sel = $('version');
+  vs.forEach(v => { const o = document.createElement('option'); o.value = o.textContent = v.version; sel.appendChild(o); });
+  S.version = vs[0].version;
+  const load = async () => {
+    const [c, a] = await Promise.all([api(`/api/champions?version=${S.version}`), api(`/api/augments?version=${S.version}`)]);
+    S.champions = withPy(c.items); S.augments = withPy(a.items);
+    S.augIcon = {}; S.augments.forEach(a => { if (a.icon) S.augIcon[a.name] = a.icon; }); S.augById = new Map(S.augments.map(a => [a.id, a])); updateFilterLabel();
+  };
+  await load();
+  sel.onchange = async () => { S.version = sel.value; S.seq++; S.allowed = new Set(); $('champCard').innerHTML = ''; $('champInput').value = ''; await load(); };
+  autocomplete('champInput', 'champDrop', () => S.champions, selectChampion);
+  [0, 1, 2].forEach(i => autocomplete('aug' + i, 'drop' + i, augSource, renderCands));
+  renderPicked();
+  const qs = new URLSearchParams(location.search), pre = qs.get('champion'), draft = qs.get('draft');
+  if (draft) { const b = $('draftBanner'); b.style.display = 'block'; b.innerHTML = `<b>第 ${esc(draft)} 轮强化选择</b><div class="stat">在下方填入三个候选后点推荐</div>`; }
+  if (pre) { const h = S.champions.find(x => x.name === pre); if (h) selectChampion(h); else $('champInput').value = pre; }
+}
+// ---------- 过滤 / 模式 / 特效 ----------
+const augSource = () => (S.only && S.allowed.size) ? S.augments.filter(a => S.allowed.has(a.id)) : S.augments;
+function updateFilterLabel() { $('okCnt').textContent = S.allowed.size ? `(${S.allowed.size}/${S.augments.length})` : '(选英雄后生效)'; }
+$('onlyOk').onclick = e => { S.only = !S.only; e.currentTarget.classList.toggle('on', S.only); };
+$('seg').onclick = e => { const b = e.target.closest('button'); if (!b || b.disabled) return; S.mode = b.dataset.m; [...$('seg').children].forEach(x => x.classList.toggle('on', x === b)); };
+function skeleton() { $('out').innerHTML = '<div class="results">' + '<div class="rc sk"></div>'.repeat(3) + '</div>'; }
+function fx(root) {
+  root.querySelectorAll('[data-count]').forEach(el => {
+    const to = +el.dataset.count, t0 = performance.now();
+    const step = t => { const k = Math.min(1, (t - t0) / 900), e = 1 - Math.pow(1 - k, 3); el.textContent = (to * e).toFixed(1) + '%'; if (k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+  root.querySelectorAll('.rc').forEach(c => {
+    const pk = c.classList.contains('pick') ? ' translateY(-6px)' : '';
+    c.onmousemove = e => { const r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      c.style.transform = `perspective(700px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg)${pk}`; c.style.setProperty('--mx', (x + .5) * 100 + '%'); c.style.setProperty('--my', (y + .5) * 100 + '%'); };
+    c.onmouseleave = () => { c.style.transform = ''; };
+  });
+  const p = root.querySelector('.rc.pick');
+  if (p) setTimeout(() => { const r = p.getBoundingClientRect();
+    for (let i = 0; i < 16; i++) { const s = document.createElement('i'), a = Math.random() * 6.28, d = 60 + Math.random() * 90;
+      s.className = 'spark'; s.style.cssText = `left:${r.left + r.width / 2}px;top:${r.top + 40}px;--dx:${Math.cos(a) * d}px;--dy:${Math.sin(a) * d}px`;
+      document.body.appendChild(s); setTimeout(() => s.remove(), 1000); } }, 350);
+}
+(() => { const bg = $('bg'); for (let i = 0; i < 14; i++) { const e = document.createElement('i'), s = 20 + Math.random() * 60;
+  e.style.cssText = `left:${Math.random() * 100}%;width:${s}px;height:${s * 1.1}px;animation-duration:${14 + Math.random() * 18}s;animation-delay:-${Math.random() * 20}s`; bg.appendChild(e); } })();
+
+// ---------- 候选预览（实时按修正胜率排序） / 能力探测 ----------
+function renderCands() {
+  const el = $('cands'); if (!el) return;
+  const rows = [0, 1, 2].map(i => $('aug' + i).value.trim()).filter(Boolean).map(n => {
+    const a = S.augments.find(x => x.name === n);
+    if (!a) return { bad: n };
+    const cw = S.augWr.get(a.id), t = cw ? cw.tm : 0;
+    return { a, raw: cw ? cw.wr : null, tm: t, nodata: !cw, picked: S.picked.includes(a.name), eff: cw ? (cw.wr * t + a.wr * 200) / (t + 200) : a.wr };
+  });
+  if (!rows.length) { el.innerHTML = ''; return; }
+  const ok = rows.filter(r => !r.bad).sort((a, b) => b.eff - a.eff);
+  const best = ok.find(r => !r.picked);
+  el.innerHTML = '<div class="stat">当前候选 · 按修正胜率排序（小样本向全局收缩）' + (S.picked.length && S.mode === 'wr' ? ' · 纯胜率模式不评估与已选的搭配' : '') + '</div>' +
+    [...ok, ...rows.filter(r => r.bad)].map((r, i) => r.bad
+      ? `<span class="cc bad">${ic('triangle-alert')}${esc(r.bad)}<small>未找到</small></span>`
+      : `<span class="cc${r === best ? ' best' : ''}${r.nodata ? ' nd' : ''}" style="animation-delay:${i * .06}s">${r === best ? ic('crown') : ''}${r.a.icon ? `<img src="${esc(r.a.icon)}" alt="" onerror="this.remove()">` : ''}${esc(r.a.name)} <b>${pct(r.eff)}</b><small>${r.picked ? '已选过' : r.nodata ? '该英雄无数据 · 用全局' : '原始 ' + pct(r.raw) + ' · ' + fmtGames(r.tm)}</small></span>`).join('');
+}
+['aug0', 'aug1', 'aug2'].forEach(id => $(id).addEventListener('input', renderCands));
+function applyStatus() {
+  const jevOff = !S.stat.jev, auto = $('seg').querySelector('[data-m="auto"]');
+  if (jevOff) { S.mode = 'wr'; auto.disabled = true; auto.title = '未配置 TYPESAFE_API_KEY，已降档为纯胜率排序'; }
+  [...$('seg').children].forEach(x => x.classList.toggle('on', x.dataset.m === S.mode));
+  if (!S.stat.ocr) { $('ocrGo').disabled = true; $('ocrMsg').textContent = '未配置 AI binding，截图识别不可用，请手动输入'; }
+}
+
+// ---------- 常用海克斯（常用 + 高胜率） ----------
+function renderTops(key) {
+  S.topKey = key = key || S.topKey || 'combo';
+  const list = [];
+  S.augWr.forEach((v, id) => { const a = S.augById && S.augById.get(id); if (a) list.push({ a, wr: v.wr, tm: v.tm, eff: (v.wr * v.tm + a.wr * 200) / (v.tm + 200) }); });
+  const tms = list.map(x => x.tm).sort((a, b) => a - b), med = tms[tms.length >> 1] || 0;
+  const rows = (key === 'pop' ? list.sort((a, b) => b.tm - a.tm) : key === 'wr' ? list.sort((a, b) => b.eff - a.eff)
+    : list.filter(x => x.tm >= med).sort((a, b) => b.eff - a.eff)).slice(0, 8);
+  const labels = { combo: '常用且高胜率', pop: '最常用', wr: '最高胜率' };
+  $('topSort').innerHTML = Object.entries(labels).map(([k, t]) => `<button class="chip tgl${k === key ? ' on' : ''}" data-k="${k}">${t}</button>`).join('');
+  $('topSort').querySelectorAll('.chip').forEach(b => b.onclick = () => renderTops(b.dataset.k));
+  $('tops').innerHTML = rows.length ? rows.map(r => `<button class="chip aug-fill" data-name="${esc(r.a.name)}">${r.a.icon ? `<img class="cic" src="${esc(r.a.icon)}" alt="" onerror="this.remove()">` : ''}${esc(r.a.name)}<small>${pct(r.eff)} · ${fmtGames(r.tm)}</small></button>`).join('') : '<span class="stat">暂无该英雄的海克斯数据</span>';
+  $('tops').querySelectorAll('.aug-fill').forEach(b => {
+    b.onclick = () => { for (let i = 0; i < 3; i++) if (!$('aug' + i).value) { $('aug' + i).value = b.dataset.name; renderCands(); return; } toast('三个位置已满'); };
+  });
+}
+
+// ---------- 屏幕捕获 / 悬浮窗 ----------
+const CROPS = { full: [0, 0, 1, 1], band: [0, .18, 1, .64], center: [.08, .2, .84, .6] };
+async function startCapture() {
+  if (!navigator.mediaDevices?.getDisplayMedia) return toast('当前浏览器不支持屏幕捕获');
+  try {
+    const st = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 5 }, audio: false });
+    S.stream = st; const v = $('capVideo'); v.srcObject = st; v.play().catch(() => {});
+    $('capBox').classList.add('on'); $('capStop').disabled = false;
+    st.getVideoTracks()[0].addEventListener('ended', stopCapture);
+    toast('已开始共享，点「截取并识别」即可');
+  } catch { toast('已取消共享'); }
+}
+function stopCapture() {
+  if (S.stream) S.stream.getTracks().forEach(t => t.stop());
+  S.stream = null; $('capVideo').srcObject = null; $('capBox').classList.remove('on'); $('capStop').disabled = true;
+}
+async function grabFrame() {
+  const tr = S.stream && S.stream.getVideoTracks()[0]; if (!tr) return false;
+  let src, W, H;
+  if ('ImageCapture' in window) { try { src = await new ImageCapture(tr).grabFrame(); W = src.width; H = src.height; } catch {} }  // 后台标签页也能取帧
+  if (!src) { const v = $('capVideo'); if (!v.videoWidth) return false; src = v; W = v.videoWidth; H = v.videoHeight; }
+  const [cx, cy, cw, ch] = CROPS[$('cropSel').value], sw = W * cw, sh = H * ch, sc = Math.min(1, 1280 / sw);
+  const cv = document.createElement('canvas'); cv.width = Math.round(sw * sc); cv.height = Math.round(sh * sc);
+  cv.getContext('2d').drawImage(src, W * cx, H * cy, sw, sh, 0, 0, cv.width, cv.height);
+  shotDataUrl = cv.toDataURL('image/jpeg', 0.82);
+  const pv = $('shotPreview'); pv.src = shotDataUrl; pv.style.display = 'block';
+  return true;
+}
+async function captureAndRun() {
+  if (!S.stream) return toast('请先在主页面点「选择游戏窗口」授权一次');
+  if (!(await grabFrame())) return toast('还没拿到画面，请稍后再试');
+  $('ocrGo').click();
+}
+$('capStart').onclick = startCapture; $('capStop').onclick = stopCapture; $('capGo').onclick = captureAndRun;
+
+async function openPip() {
+  if (!('documentPictureInPicture' in window)) return toast('当前浏览器不支持悬浮窗（需 Chrome / Edge 116+）');
+  const w = await documentPictureInPicture.requestWindow({ width: 340, height: 260 });
+  [...document.styleSheets].forEach(ss => { try { const st = w.document.createElement('style'); st.textContent = [...ss.cssRules].map(r => r.cssText).join(' '); w.document.head.appendChild(st); } catch {} });
+  w.document.body.className = 'pip';
+  w.document.body.innerHTML = `<div class="pipbox"><button class="btn gold" id="pipGo">${ic('scan-line')}截取并识别</button><div id="pipMsg" class="stat">${S.stream ? '就绪' : '请先在主页面选择游戏窗口'}</div><div id="pipRes" class="cands" style="margin:0"></div></div>`;
+  w.document.getElementById('pipGo').onclick = captureAndRun;
+  w.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key.toLowerCase() === 'r') captureAndRun(); });
+  S.pipMsg = w.document.getElementById('pipMsg'); S.pipRes = w.document.getElementById('pipRes');
+  w.addEventListener('pagehide', () => { S.pipMsg = S.pipRes = null; });
+}
+function pipNotify(r) {
+  if (!S.pipRes) return;
+  S.pipMsg.textContent = r.degraded ? '已降档为纯胜率排序' : '识别完成';
+  S.pipRes.innerHTML = r.ranking.map(x => `<span class="cc${x.name === r.pick ? ' best' : ''}">${x.name === r.pick ? ic('crown') : ''}${esc(x.name)} <b>${pct(x.eff != null ? x.eff : (x.champWr != null ? x.champWr : x.globalWr))}</b></span>`).join('');
+}
+$('pipBtn').onclick = () => openPip().catch(e => toast('悬浮窗失败：' + e.message));
+
+hydrate();
+init().catch(e => { $('out').innerHTML = `<div class="warn">初始化失败：${esc(e.message)}</div>`; });
+</script>
+</body>
+</html>
+

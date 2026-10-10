@@ -1,0 +1,1 @@
+{"name":"hextech-recommender-worker","private":true,"scripts":{"build":"node build.mjs","deploy":"npm run build && wrangler deploy","dev":"wrangler dev"},"type":"module","version":"0.3.0"}

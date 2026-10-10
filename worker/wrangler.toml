@@ -1,0 +1,12 @@
+name = "hextech-recommender"
+main = "dist/worker.js"
+compatibility_date = "2024-12-01"
+
+# Workers AI（/api/ocr 用，可选）
+[ai]
+binding = "AI"
+
+# 构建产物部署：npm run build && npx wrangler deploy
+# Secrets（dashboard → Settings → Secrets，或 wrangler secret put）：
+#   TYPESAFE_API_KEY — Typesafe jev API Key（可选；不设则用纯胜率规则）
+#   ACCESS_TOKEN     — 可选；设置后 /api/* 需要 ?token= 或 X-Token 头
