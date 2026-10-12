@@ -1,6 +1,6 @@
 // 推荐：jev 决策 + 本地降级 + 英雄详情
 import { buildCandidateContextData, buildState, buildJevBody, buildConflictBody, extractPick, effWr, getBalanceTone } from './core.js';
-import { resgFetch, findByQuery, latestVersion, ico } from './resg.js';
+import { resgFetch, findByQuery, latestVersion, ico, champIcon } from './resg.js';
 export const JEV = 'https://api.typesafe.ai/v1/systemone';
 export async function jevCall(env, body) {
   const jr = await fetch(JEV, {
@@ -76,5 +76,5 @@ export async function championDetail(query, version) {
     return { id: r[0], name: a?.name ?? `海克斯#${r[0]}`, wr: r[4] / 1e4, tm: r[2], icon: ico(a?.ip) };
   });
   // augIds：该英雄有对局数据的海克斯 id，前端据此过滤
-  return { version: v, champion: { ...champion, icon: ico(champion.ip ?? champEnt.ip) }, buffs, topAugments, augIds: ra.map((r) => r[0]), augWr: ra.map((r) => [r[0], r[4] / 1e4, r[2]]) };
+  return { version: v, champion: { ...champion, icon: champIcon(champion.alias ?? champEnt.alias, ico(champion.ip ?? champEnt.ip)) }, buffs, topAugments, augIds: ra.map((r) => r[0]), augWr: ra.map((r) => [r[0], r[4] / 1e4, r[2]]) };
 }

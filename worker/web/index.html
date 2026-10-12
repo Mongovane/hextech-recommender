@@ -26,6 +26,24 @@ input:focus,select:focus{border-color:var(--cy);box-shadow:0 0 0 3px #19d3e622}
 .step:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
 .panel{background:linear-gradient(180deg,#0d1b2e,var(--panel));border:1px solid var(--line);border-radius:14px;padding:16px}
 .field{position:relative}
+.clr{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:26px;height:26px;border:0;border-radius:50%;background:#12263d;color:var(--mut);cursor:pointer;display:none;place-items:center;padding:0;z-index:5}
+.clr.show{display:grid}
+.clr:hover{color:var(--cy);background:#16304d}
+.clr .ico{width:14px;height:14px}
+.iconbtn{flex:none;width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:#0a1524;color:var(--mut);cursor:pointer;display:grid;place-items:center;padding:0}
+.iconbtn:hover{color:var(--cy);border-color:var(--cy)}
+.iconbtn .ico{width:18px;height:18px}
+.setpop{position:absolute;top:70px;right:16px;width:320px;max-width:calc(100vw - 32px);background:#0c1a2c;border:1px solid var(--cy);border-radius:12px;padding:14px;z-index:50;display:none;box-shadow:0 14px 40px #000a}
+.setpop.open{display:block}
+.setrow{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.setrow .st{margin-left:auto;font-size:12px;font-weight:400}
+.st.ok{color:var(--up)}.st.no{color:var(--down)}
+.setpop input{flex:1;min-width:0}
+@keyframes flash{0%,100%{box-shadow:none}30%{box-shadow:0 0 0 3px #19d3e6aa}}
+input.flash{animation:flash 1.2s ease}
+.rc .desc{font-size:12px;color:var(--mut);margin:2px 0 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5}
+.opt .od{display:block;font-size:11px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px}
+.opt>span{min-width:0}
 .drop{position:absolute;top:100%;left:0;right:0;margin-top:6px;background:#0c1a2c;border:1px solid var(--cy);border-radius:10px;max-height:300px;overflow:auto;z-index:20;display:none;box-shadow:0 14px 40px #000a}
 .drop.open{display:block}
 .opt{padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;gap:8px}
@@ -119,7 +137,6 @@ linear-gradient(var(--cy),var(--cy)) 0 0/18px 2px,linear-gradient(var(--cy),var(
 linear-gradient(var(--cy),var(--cy)) 100% 0/18px 2px,linear-gradient(var(--cy),var(--cy)) 100% 0/2px 18px,
 linear-gradient(var(--cy),var(--cy)) 0 100%/18px 2px,linear-gradient(var(--cy),var(--cy)) 0 100%/2px 18px,
 linear-gradient(var(--cy),var(--cy)) 100% 100%/18px 2px,linear-gradient(var(--cy),var(--cy)) 100% 100%/2px 18px;background-repeat:no-repeat}
-.shot:after{content:"";position:absolute;left:0;right:0;top:0;height:60px;pointer-events:none;opacity:0;background:linear-gradient(180deg,transparent,#19d3e61f 70%,#19d3e680)}
 .shot:hover,.shot.over{border-color:#19d3e688;box-shadow:0 0 30px #19d3e620 inset}
 .shot:hover:before,.shot.over:before{inset:5px;opacity:1}
 .shot:hover:after,.shot.over:after{opacity:1;animation:scan 1.8s linear infinite}
@@ -139,6 +156,178 @@ linear-gradient(var(--cy),var(--cy)) 100% 100%/18px 2px,linear-gradient(var(--cy
 .capbox{display:none;margin-top:12px}.capbox.on{display:block}
 .capbox video{width:100%;max-height:200px;border-radius:10px;border:1px solid var(--line);background:#000;object-fit:contain}
 .pip .pipbox{padding:12px;display:grid;gap:8px}.pip .pipbox .btn{width:100%}
+
+/* ===== v3：玻璃透明主题 + 动效 ===== */
+:root{--glass:rgba(10,24,40,.34);--glass2:rgba(255,255,255,.035);--ln:rgba(120,200,230,.16)}
+::selection{background:#19d3e655}
+html{scroll-behavior:smooth}
+*{scrollbar-width:thin;scrollbar-color:#1d4260 transparent}
+.wrap{max-width:1040px;z-index:1}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(520px circle at var(--cx,50%) var(--cy2,30%),rgba(25,211,230,.07),transparent 60%)}
+.panel{position:relative;background:var(--glass);border:1px solid var(--ln);backdrop-filter:blur(10px) saturate(1.2);-webkit-backdrop-filter:blur(10px) saturate(1.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+.panel:focus-within{z-index:30}
+.slot,.cc,.chip,.pill,.seg,.iconbtn,.btn.ghost{background:var(--glass2);border-color:var(--ln)}
+input,select{background:rgba(6,14,26,.35);border-color:var(--ln)}
+.seg button{background:transparent}.seg button.on{background:linear-gradient(135deg,var(--cy),#5fe8c0)}
+.rc{background:linear-gradient(180deg,rgba(20,44,70,.42),rgba(9,18,31,.18));backdrop-filter:blur(8px);border-color:var(--ln)}
+.rc.pick{background:linear-gradient(180deg,rgba(64,50,14,.5),rgba(13,21,34,.18) 70%);border-color:var(--gold)}
+.drop,.setpop{background:rgba(9,20,34,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.chip,.cc,.slot,.btn{transition:.2s}
+.chip:hover{transform:translateY(-1px);background:rgba(25,211,230,.08)}
+.slot:focus-within{border-color:var(--cy);box-shadow:0 0 0 3px rgba(25,211,230,.12),0 0 24px rgba(25,211,230,.12)}
+.btn{position:relative;overflow:hidden}
+.btn:not(:disabled):after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);transition:left .6s;pointer-events:none}
+.btn:not(:disabled):hover:after{left:130%}
+.btn.xl{padding:15px 28px;font-size:16px}
+.rv{opacity:0;transform:translateY(16px);transition:opacity .6s,transform .6s cubic-bezier(.2,.8,.2,1)}.rv.in{opacity:1;transform:none}
+.mono{animation:flt 5s ease-in-out infinite}@keyframes flt{50%{transform:translateY(-4px)}}
+.step b{animation:pls 2.4s ease-in-out infinite}@keyframes pls{50%{filter:drop-shadow(0 0 7px rgba(25,211,230,.9))}}
+/* 英雄卡 */
+.champ{align-items:center;gap:18px;margin-top:4px}
+.cinfo{flex:1;min-width:0}
+.cwr{text-align:right;flex:none}.cwr b{display:block;font-size:34px;font-weight:900;color:var(--cy);letter-spacing:-1px;text-shadow:0 0 22px rgba(25,211,230,.45)}.cwr small{color:var(--mut);font-size:11px}
+.sec{margin-top:18px;padding-top:14px;border-top:1px solid var(--ln)}
+.sh{display:flex;align-items:baseline;gap:10px;font-size:13px;font-weight:700;letter-spacing:1px;list-style:none}
+.sh small{color:var(--mut);font-weight:400;letter-spacing:0;font-size:12px}
+details.sec>summary{cursor:pointer;align-items:center}details.sec>summary::-webkit-details-marker{display:none}
+.chev{margin-left:auto;display:inline-flex;transition:transform .25s}details.sec[open] .chev{transform:rotate(180deg)}.sh .ico{width:18px;height:18px;color:var(--cy);align-self:center}
+#builds>.stat[style*="margin:8px 0 4px"]{margin:16px 0 6px!important;display:flex;align-items:center;gap:8px;letter-spacing:1px}
+#builds>.stat[style*="margin:8px 0 4px"]:before{content:"";width:3px;height:12px;border-radius:2px;background:currentColor}
+#builds .chips{gap:8px}#builds .cic{width:24px;height:24px}
+/* 一键识别区 */
+.scan{display:flex;gap:16px;flex-wrap:wrap;padding:16px;border-radius:14px;border:1px solid var(--ln);background:linear-gradient(135deg,rgba(25,211,230,.07),rgba(106,53,255,.06));transition:.3s}
+.scan-main{flex:1 1 320px;display:grid;gap:8px;align-content:center}
+.scan-sub{color:var(--mut);font-size:12px}
+.scan-side{display:flex;flex-wrap:wrap;gap:8px;align-items:center;align-content:center}
+.scan.live{border-color:rgba(61,220,151,.5);box-shadow:0 0 30px rgba(61,220,151,.1) inset}
+.scan.live .scan-sub:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--up);margin-right:6px;animation:blk 1.4s infinite}
+@keyframes blk{50%{opacity:.25}}
+.mini{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border:1px solid var(--ln);border-radius:10px;cursor:pointer;color:var(--mut);background:var(--glass2);transition:.2s}
+.mini:hover,.mini.over{color:var(--cy);border-color:var(--cy);background:rgba(25,211,230,.08)}
+.pv{display:none;max-height:220px;max-width:100%;margin:12px auto 0;border-radius:10px;border:1px solid var(--ln)}
+/* 设置面板 */
+.setpop{width:340px;padding:0;overflow:hidden;border-color:var(--ln);box-shadow:0 18px 50px rgba(0,0,0,.55)}
+.sph{padding:14px 16px;font-weight:800;letter-spacing:1px;border-bottom:1px solid var(--ln);display:flex;align-items:baseline;gap:8px}.sph small{color:var(--mut);font-weight:400;font-size:11px;letter-spacing:0}
+.sb{padding:6px 16px 14px}
+.srow{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(120,200,230,.08)}
+.srow .ico{width:18px;height:18px;margin-top:1px}.srow.ok .ico{color:var(--up)}.srow.no .ico{color:var(--gold)}
+.srow b{display:block;font-size:13px}
+.hint{font-size:12px;color:var(--mut);line-height:1.6}
+.hint code{background:rgba(25,211,230,.1);color:var(--cy);padding:1px 6px;border-radius:5px;cursor:pointer}
+.srow .st{margin-left:auto;font-size:11px;font-style:normal;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.srow.ok .st{background:rgba(61,220,151,.14);color:var(--up)}.srow.no .st{background:rgba(240,195,90,.14);color:var(--gold)}
+.sgrp{font-size:11px;letter-spacing:2px;color:var(--mut);margin:14px 0 6px}
+.tokrow{display:flex;gap:8px;margin-bottom:8px}.tokrow input{flex:1;min-width:0}.tokrow .btn{flex:1;padding:8px}
+/* 悬浮窗 */
+body.pip{padding:0;min-height:0;background:#071322}
+/* 悬浮窗：LoL 赫克斯风格（深金边框、直角面板、不透明） */
+body.pip{background:#010a13}
+.pip .pipbox{padding:0;display:grid;gap:0;background:linear-gradient(180deg,#0d1729,#060c17);border:1px solid #8a6d3b;border-radius:4px;box-shadow:0 0 0 1px #000,0 12px 32px rgba(0,0,0,.8),inset 0 1px 0 rgba(240,230,210,.08);overflow:hidden}
+.pip .pipbox .btn{width:100%}
+.pip-top{display:flex;align-items:center;gap:8px;padding:8px 12px;font-size:13px;background:linear-gradient(180deg,rgba(240,195,90,.12),transparent 70%);border-bottom:1px solid rgba(138,109,59,.4)}
+.pip-top .sp{flex:1}
+.pip-dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--up);box-shadow:0 0 8px var(--up)}
+.pip-ico{background:#0a1322;border:1px solid #8a6d3b;color:#f0e6d2;border-radius:3px;min-width:26px;height:26px;cursor:pointer;font-size:14px;line-height:1;padding:0 4px}
+.pip-ico:hover{border-color:var(--gold);color:#fff}
+#pipBody{display:grid;gap:8px;padding:10px 12px 12px}
+.pip-hero{margin:0;position:relative}
+.pip-hero input{width:100%;padding:9px 12px;font-size:13px;background:#04090f;border:1px solid #2a3f57;border-radius:3px;color:var(--txt)}
+.pip-hero input:focus{border-color:var(--gold);outline:none}
+.pip-hero .drop{max-height:220px;background:#0a1322;border:1px solid #8a6d3b}
+.auto{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--mut);cursor:pointer}.auto input{width:auto;accent-color:var(--cy)}
+.pipres{display:grid;gap:6px}.pipres .cc{font:inherit;font-size:13px;color:var(--txt);cursor:pointer;justify-content:flex-start;text-align:left;background:#0a1322;border:1px solid #2a3f57;border-radius:3px}
+.pipres .cc.best{border-color:var(--gold);box-shadow:inset 0 0 12px rgba(240,195,90,.12)}
+@keyframes pipFlash{0%,100%{box-shadow:0 0 0 1px #000,0 12px 32px rgba(0,0,0,.8)}30%,70%{box-shadow:0 0 0 2px var(--gold),0 0 26px var(--gold)}}
+.pip .pipbox.flash{animation:pipFlash 1.1s ease 3}
+/* v5：游戏内 HUD 优先小巧、内容可滚动，避免推荐列表撑出悬浮窗（选择器已修正） */
+body.pip{width:100%;height:100%;overflow:hidden;font-size:12px}
+body.pip .pipbox{height:100%;min-height:0;grid-template-rows:auto minmax(0,1fr)}
+body.pip .pip-top{padding:6px 8px;min-height:34px}
+body.pip #pipMsg{font-size:11px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.pip #pipBody{min-height:0;overflow:auto;overscroll-behavior:contain;gap:7px;padding:8px}
+body.pip .pip-hero input{padding:7px 9px;font-size:12px}
+body.pip #pipGo{padding:8px 12px;font-size:13px}
+body.pip .auto{font-size:11px;line-height:1.35}
+body.pip .pipres{gap:4px}
+body.pip .pipres .cc{padding:5px 7px;min-height:32px;font-size:12px}
+body.pip .pipres .cc b{margin-left:auto}
+body.pip .pip-hero .drop{max-height:130px}
+@media(max-height:260px){body.pip #pipBody{gap:4px;padding:5px}body.pip .auto{font-size:10px}}
+@media(max-width:720px){.cwr{display:none}}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+
+/* ===== v4：HUD 扫描框 / 海克斯卡片 / 出装卡片 / 提示卡 ===== */
+.hud{position:relative;overflow:hidden;padding:34px 20px 26px;text-align:center;border-radius:16px;background:radial-gradient(560px 170px at 50% 0,rgba(25,211,230,.12),transparent 70%);transition:.3s}
+.hud .cn{position:absolute;width:24px;height:24px;border:2px solid var(--cy);opacity:.7;transition:.3s;pointer-events:none}
+.cn.n1{top:10px;left:10px;border-right:0;border-bottom:0;border-top-left-radius:6px}.cn.n2{top:10px;right:10px;border-left:0;border-bottom:0;border-top-right-radius:6px}
+.cn.n3{bottom:10px;left:10px;border-right:0;border-top:0;border-bottom-left-radius:6px}.cn.n4{bottom:10px;right:10px;border-left:0;border-top:0;border-bottom-right-radius:6px}
+.hud:hover .cn,.hud.over .cn,.hud.live .cn{opacity:1;filter:drop-shadow(0 0 6px var(--cy))}
+.hud:hover .cn.n1,.hud.over .cn.n1,.hud.live .cn.n1{top:5px;left:5px}.hud:hover .cn.n2,.hud.over .cn.n2,.hud.live .cn.n2{top:5px;right:5px}
+.hud:hover .cn.n3,.hud.over .cn.n3,.hud.live .cn.n3{bottom:5px;left:5px}.hud:hover .cn.n4,.hud.over .cn.n4,.hud.live .cn.n4{bottom:5px;right:5px}
+.hud.live .cn{border-color:var(--up);filter:drop-shadow(0 0 6px var(--up))}
+.scanline{position:absolute;left:0;right:0;top:-70px;height:70px;pointer-events:none;opacity:0;background:linear-gradient(180deg,transparent,rgba(25,211,230,.13) 70%,rgba(25,211,230,.5))}
+.hud:hover .scanline,.hud.over .scanline,.hud.live .scanline{opacity:1;animation:hudscan 2.6s linear infinite}
+@keyframes hudscan{to{top:100%}}
+.hud-ico{width:58px;height:58px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;color:var(--cy);background:rgba(25,211,230,.1);box-shadow:0 0 0 1px rgba(25,211,230,.3),0 0 30px rgba(25,211,230,.2)}.hud-ico .ico{width:28px;height:28px}
+.hud.live .hud-ico{color:var(--up);background:rgba(61,220,151,.1);box-shadow:0 0 0 1px rgba(61,220,151,.4),0 0 30px rgba(61,220,151,.2)}
+.hud-title{font-size:18px;font-weight:800;letter-spacing:1px}
+.hud-sub{margin:6px auto 18px;max-width:560px;color:var(--mut);font-size:13px}.hud-sub a{color:var(--cy);cursor:pointer;text-decoration:underline}
+.hud.live .hud-sub:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--up);margin-right:6px;animation:blk 1.4s infinite}
+.hud-more{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:16px}
+button.mini{font:inherit;font-size:13px}button.mini:disabled{opacity:.4;cursor:not-allowed}
+.hud.off .xl{filter:grayscale(.85);opacity:.55}.hud.off .hud-ico{color:var(--mut);box-shadow:0 0 0 1px var(--ln)}
+/* 设置 */
+.srow{align-items:center}.srow b{display:inline;font-size:13px}
+.how{margin-left:6px;width:22px;height:22px;border-radius:50%;border:1px solid var(--ln);background:none;color:var(--mut);cursor:pointer;display:none;place-items:center;font-size:12px;padding:0}.srow.no .how{display:grid}.how:hover{color:var(--cy);border-color:var(--cy)}
+.howbox{display:none;margin:-2px 0 8px 28px;font-size:12px;color:var(--mut);line-height:1.6}.howbox code{background:rgba(25,211,230,.1);color:var(--cy);padding:1px 6px;border-radius:5px;cursor:pointer}
+.sgrp{margin:12px 0 6px}
+/* 常用海克斯 */
+#topSort .seg{margin-top:0}
+#tops{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:12px;margin-top:12px}
+.ac{position:relative;padding:14px;border-radius:14px;border:1px solid var(--ln);background:linear-gradient(180deg,rgba(25,211,230,.06),rgba(255,255,255,.015));cursor:pointer;transition:.25s;overflow:hidden}
+.ac:hover{transform:translateY(-3px);border-color:rgba(25,211,230,.5);box-shadow:0 10px 30px rgba(0,0,0,.35),0 0 24px rgba(25,211,230,.12)}
+.ac.in{border-color:var(--up);background:linear-gradient(180deg,rgba(61,220,151,.1),rgba(255,255,255,.015))}
+.ac.in .ac-meta:after{content:" · 已填入";color:var(--up)}
+.ac-top{display:flex;gap:12px;align-items:center}
+.ac-ic{flex:none;width:54px;height:54px;border-radius:14px;padding:2px;background:linear-gradient(135deg,rgba(255,255,255,.2),rgba(255,255,255,.04))}
+.ac-ic.t-T0{background:linear-gradient(135deg,#a56bff,#5b2bd6)}.ac-ic.t-T1{background:linear-gradient(135deg,#4aa0ff,#1f5fe0)}
+.ac-ic img{width:100%;height:100%;border-radius:12px;display:block;object-fit:cover}
+.ac-nm{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;align-items:flex-start}.ac-nm b{font-size:15px;line-height:1.25}.ac-nm .tier{margin:0}
+.ac-info{flex:none;width:28px;height:28px;border-radius:50%;border:1px solid var(--ln);background:rgba(255,255,255,.04);color:var(--mut);cursor:pointer;display:grid;place-items:center;padding:0;align-self:flex-start}.ac-info:hover,.ac.open .ac-info{color:var(--cy);border-color:var(--cy)}.ac-info .ico{width:15px;height:15px}
+.ac-wr{display:flex;align-items:baseline;gap:8px;margin-top:12px}.ac-wr b{font-size:28px;font-weight:900;color:var(--cy);letter-spacing:-1px}.ac-wr .d{font-size:12px;font-weight:700}
+.ac-bar{height:5px;border-radius:3px;background:rgba(255,255,255,.07);margin:8px 0 6px;overflow:hidden}.ac-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--cy),#6a35ff);border-radius:3px}
+.ac-meta{font-size:12px;color:var(--mut)}
+.ac-desc{margin-top:10px;font-size:12.5px;line-height:1.65;color:#b9cad6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.ac.open .ac-desc{-webkit-line-clamp:unset}
+.ac-more{display:none;grid-template-columns:1fr 1fr;gap:6px 12px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.08);font-size:12px;color:var(--mut)}.ac-more b{display:block;color:var(--txt);font-size:13px}.ac.open .ac-more{display:grid}
+.ac-fill{position:absolute;left:0;right:0;bottom:0;padding:9px;font-size:12.5px;font-weight:800;color:#041018;background:linear-gradient(135deg,var(--cy),#5fe8c0);transform:translateY(100%);transition:.25s;display:flex;align-items:center;justify-content:center;gap:6px}.ac:hover .ac-fill{transform:none}
+.more{grid-column:1/-1;padding:10px;border-radius:12px;border:1px solid var(--ln);background:rgba(255,255,255,.03);color:var(--mut);font:inherit;cursor:pointer;transition:.2s}.more:hover{color:var(--cy);border-color:var(--cy)}
+/* 出装推荐 */
+.bs{margin-top:22px}.bs:first-child{margin-top:12px}
+.bh{display:flex;align-items:center;gap:8px;margin-bottom:12px}.bh b{font-size:14px;letter-spacing:1px}.bh small{color:var(--mut);font-size:12px}.bh .ico{color:var(--cy);width:18px;height:18px}
+.bs.bad .bh .ico,.bs.bad .bh b{color:var(--down)}
+.cb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.cb{position:relative;padding:18px 14px 12px;border-radius:14px;border:1px solid var(--ln);background:linear-gradient(180deg,rgba(25,211,230,.05),rgba(255,255,255,.01));transition:.25s}.cb:hover{transform:translateY(-2px)}
+.cb.best{border-color:rgba(240,195,90,.7);background:linear-gradient(180deg,rgba(80,62,16,.35),rgba(255,255,255,.01));box-shadow:0 0 28px rgba(240,195,90,.12)}
+.cb.bad{border-color:rgba(255,107,122,.35);background:linear-gradient(180deg,rgba(90,20,30,.28),rgba(255,255,255,.01))}
+.cb-rk{position:absolute;top:-10px;left:12px;font-size:11px;font-weight:800;padding:1px 10px;border-radius:99px;background:#173049;color:var(--txt)}.cb.best .cb-rk{background:var(--gold);color:#241a02}
+.cb-items{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.pl{font-style:normal;color:var(--mut);font-weight:700}
+.bi{display:inline-block;width:48px;height:48px;border-radius:11px;overflow:hidden;border:1px solid rgba(255,255,255,.16);flex:none;background:#0a1524;transition:.2s}.bi:hover{transform:scale(1.08);border-color:var(--cy)}.bi img{width:100%;height:100%;display:block}
+.cb-wr{display:flex;align-items:baseline;gap:10px;margin-top:12px}.cb-wr b{font-size:26px;font-weight:900;color:var(--cy)}.cb.best .cb-wr b{color:var(--gold)}.cb.bad .cb-wr b{color:var(--down)}.cb-wr small{color:var(--mut);font-size:12px}
+.cb-nm{margin-top:6px;font-size:12px;color:#9fb4c3;line-height:1.5}
+.tl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:10px}
+.tl{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;border:1px solid var(--ln);background:rgba(255,255,255,.025);transition:.2s}.tl:hover{border-color:rgba(25,211,230,.45);transform:translateY(-2px)}
+.tl-t{flex:1;min-width:0}.tl-t b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13.5px;line-height:1.3}.tl-t small{color:var(--mut);font-size:11.5px}
+.tl-bar{height:4px;border-radius:2px;background:rgba(255,255,255,.07);margin-top:6px;overflow:hidden}.tl-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--cy),#6a35ff)}
+.tl-w{font-size:17px;font-weight:800;color:var(--cy)}.qty{color:var(--gold);margin-right:4px}
+.sp-grid{display:flex;flex-wrap:wrap;gap:10px}.sp{display:flex;align-items:baseline;gap:10px;padding:10px 16px;border-radius:12px;border:1px solid var(--ln);background:rgba(255,255,255,.025)}.sp b{font-size:14px}.sp span{font-weight:800;color:var(--cy);font-size:16px}.sp small{color:var(--mut)}
+.sk{display:flex;gap:8px;align-items:center;color:var(--mut);margin-top:22px}.sk b{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--cy),#5fe8c0);color:#041018}
+.trap-row{display:flex;flex-wrap:wrap;gap:10px}.trap{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 6px;border-radius:12px;border:1px solid rgba(255,107,122,.4);background:rgba(90,20,30,.25);font-size:13px}.trap img{width:34px;height:34px;border-radius:8px}
+.bsnote{font-size:12px;color:var(--gold);margin-bottom:6px}
+.up{color:var(--up)}.down{color:var(--down)}
+#tip{position:fixed;left:0;top:0;z-index:90;width:max-content;max-width:320px;pointer-events:none;opacity:0;transition:opacity .15s;padding:12px 14px;border-radius:12px;background:rgba(7,18,32,.96);border:1px solid rgba(25,211,230,.4);box-shadow:0 14px 40px rgba(0,0,0,.6);backdrop-filter:blur(10px)}
+#tip.on{opacity:1}.tp-h{display:flex;gap:10px;align-items:center}.tp-h img{width:40px;height:40px;border-radius:9px}.tp-h b{display:block;font-size:14px}.tp-h span{font-size:12px;color:var(--gold)}
+.tp-d{margin-top:8px;font-size:12.5px;line-height:1.65;color:#c4d3de}.tp-s{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08);font-size:12px;color:var(--mut)}.tp-s b{margin-left:6px;color:var(--cy)}
+.srow .st{background:rgba(255,255,255,.06);color:var(--mut)}
 </style>
 </head>
 <body>
@@ -148,12 +337,27 @@ linear-gradient(var(--cy),var(--cy)) 100% 100%/18px 2px,linear-gradient(var(--cy
   <div class="logo"><i data-i="swords"></i></div>
   <h1>HEXTECH 推荐官<small>海克斯大乱斗 · 三选一决策</small></h1>
   <select id="version"></select>
+  <button class="iconbtn" id="setBtn" title="设置"><i data-i="settings"></i></button>
 </header>
+<div class="setpop" id="setPop">
+  <div class="sph">设置</div>
+  <div class="sb">
+    <div class="srow" id="rowJev"><span id="siJev"></span><b>jev 智能决策</b><em class="st" id="stJev">检测中…</em><button class="how" data-how="Jev" title="如何开启">?</button></div>
+    <div class="howbox" id="howJev"></div>
+    <div class="srow" id="rowLoc"><span id="siLoc"></span><b>本地识别（内置）</b><em class="st" id="stLoc">未加载</em></div>
+    <div class="srow" id="rowOcr"><span id="siOcr"></span><b>AI 兜底识别</b><em class="st" id="stOcr">检测中…</em><button class="how" data-how="Ocr" title="如何开启">?</button></div>
+    <div class="howbox" id="howOcr"></div>
+    <div class="sgrp">访问令牌</div>
+    <div class="tokrow"><input type="password" id="tokenInput" placeholder="ACCESS_TOKEN" autocomplete="off"><button class="iconbtn" id="tokenEye" title="显示 / 隐藏"><i data-i="eye"></i></button><button class="iconbtn" id="tokenSave" title="保存"><i data-i="check"></i></button><button class="iconbtn" id="tokenClear" title="清除"><i data-i="x"></i></button></div>
+    <div class="sgrp">截图范围</div>
+    <select id="cropSel"><option value="full">整个画面</option><option value="band">中部横带</option><option value="center">中央</option></select>
+  </div>
+</div>
 <div id="draftBanner" class="panel" style="display:none;margin-bottom:10px"></div>
 
 <div class="step"><b>1</b>选择英雄</div>
 <div class="panel">
-  <div class="field"><input id="champInput" placeholder="搜索英雄：亚索 / yasuo / ys" autocomplete="off"><div id="champDrop" class="drop"></div></div>
+  <div class="field"><input id="champInput" placeholder="搜索英雄：亚索 / yasuo / ys" autocomplete="off"><button class="clr" id="champClear" title="清除"><i data-i="x"></i></button><div id="champDrop" class="drop"></div></div>
   <div id="champCard"></div>
 </div>
 
@@ -162,23 +366,29 @@ linear-gradient(var(--cy),var(--cy)) 100% 100%/18px 2px,linear-gradient(var(--cy
 
 <div class="step"><b>3</b>输入三选一</div>
 <div class="panel">
-  <label class="shot" id="shot" for="shotInput">
-    <div><i data-i="camera"></i>拖入 / 点击上传 / <b>Ctrl+V 粘贴</b>三选一截图</div>
-    <div class="stat">自动识别三张卡并推荐（需 Worker 配置 AI binding）</div>
-    <img id="shotPreview">
-  </label>
-  <input type="file" id="shotInput" accept="image/*" hidden>
+  <div class="hud" id="scan">
+    <i class="cn n1"></i><i class="cn n2"></i><i class="cn n3"></i><i class="cn n4"></i><div class="scanline"></div>
+    <div class="hud-ico"><i data-i="scan-line"></i></div>
+    <div class="hud-title">截取游戏画面，自动识别三张海克斯</div>
+    <div class="hud-sub" id="liveSub">点「一键悬浮识别」，选择「整个屏幕」分享一次：选人自动识别英雄，对局出卡/刷新自动识别推荐（本地识别，不耗 AI 额度）</div>
+    <button class="btn gold xl" id="liveGo"><i data-i="picture-in-picture-2"></i>一键悬浮识别</button>
+    <div class="hud-more">
+      <label class="mini" id="shot" for="shotInput"><i data-i="camera"></i>上传 / 粘贴 / 拖入截图</label>
+      <input type="file" id="shotInput" accept="image/*" hidden>
+      <button class="mini" id="capGo"><i data-i="scan-line"></i>截取并识别</button>
+      <button class="mini" id="capStop" disabled><i data-i="x"></i>停止共享</button>
+      <button class="mini" id="shotClear">清除截图</button>
+    </div>
+    <img id="shotPreview" class="pv" alt="">
+  </div>
   <div class="capbox" id="capBox"><video id="capVideo" muted playsinline></video></div>
-  <div class="cta" style="margin:12px 0 6px"><button class="btn ghost" id="capStart"><i data-i="monitor"></i>选择游戏窗口</button><button class="btn" id="capGo"><i data-i="scan-line"></i>截取并识别</button><button class="btn ghost" id="capStop" disabled><i data-i="x"></i>停止共享</button><button class="btn ghost" id="pipBtn"><i data-i="picture-in-picture-2"></i>悬浮窗</button>
-    <select id="cropSel"><option value="full">裁剪：整个画面</option><option value="band" selected>裁剪：中部横带</option><option value="center">裁剪：中央</option></select></div>
-  <div class="stat" style="margin-bottom:8px">先点「选择游戏窗口」授权一次，之后可在悬浮窗里一键截取。游戏需为无边框 / 窗口化，独占全屏浏览器抓不到。</div>
-  <div class="cta" style="margin:6px 0 22px"><button class="btn gold" id="ocrGo">识别并推荐</button><span class="stat" id="ocrMsg" style="align-self:center"></span></div>
+  <div class="cta" style="margin:10px 0 18px"><button class="btn gold" id="ocrGo">识别并推荐</button><span class="stat" id="ocrMsg" style="align-self:center"></span></div>
   <div class="ctrl"><div class="seg" id="seg"><button data-m="auto" class="on"><i data-i="brain-circuit"></i>智能（jev）</button><button data-m="wr"><i data-i="chart-column"></i>纯胜率排序</button></div>
     <button class="chip tgl on" id="onlyOk" type="button"><i data-i="list-filter"></i>仅显示该英雄可选海克斯<em id="okCnt"></em></button></div>
   <div class="slots">
-    <div class="slot"><i>A</i><div class="field"><input id="aug0" placeholder="海克斯 1" autocomplete="off"><div id="drop0" class="drop"></div></div></div>
-    <div class="slot"><i>B</i><div class="field"><input id="aug1" placeholder="海克斯 2" autocomplete="off"><div id="drop1" class="drop"></div></div></div>
-    <div class="slot"><i>C</i><div class="field"><input id="aug2" placeholder="海克斯 3" autocomplete="off"><div id="drop2" class="drop"></div></div></div>
+    <div class="slot"><i>A</i><div class="field"><input id="aug0" placeholder="海克斯 1" autocomplete="off"><button class="clr" id="augClear0" title="清除"><i data-i="x"></i></button><div id="drop0" class="drop"></div></div></div>
+    <div class="slot"><i>B</i><div class="field"><input id="aug1" placeholder="海克斯 2" autocomplete="off"><button class="clr" id="augClear1" title="清除"><i data-i="x"></i></button><div id="drop1" class="drop"></div></div></div>
+    <div class="slot"><i>C</i><div class="field"><input id="aug2" placeholder="海克斯 3" autocomplete="off"><button class="clr" id="augClear2" title="清除"><i data-i="x"></i></button><div id="drop2" class="drop"></div></div></div>
   </div>
   <div class="cands" id="cands"></div>
   <div class="cta"><button class="btn main" id="go"><i data-i="zap"></i>推荐最优</button><button class="btn ghost" id="clearSlots">清空</button></div>
@@ -190,8 +400,10 @@ linear-gradient(var(--cy),var(--cy)) 100% 100%/18px 2px,linear-gradient(var(--cy
 <div id="toast"></div>
 
 <script>
-const ICONS = {"brain-circuit": "<path d=\"M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z\" /> <path d=\"M9 13a4.5 4.5 0 0 0 3-4\" /> <path d=\"M6.003 5.125A3 3 0 0 0 6.401 6.5\" /> <path d=\"M3.477 10.896a4 4 0 0 1 .585-.396\" /> <path d=\"M6 18a4 4 0 0 1-1.967-.516\" /> <path d=\"M12 13h4\" /> <path d=\"M12 18h6a2 2 0 0 1 2 2v1\" /> <path d=\"M12 8h8\" /> <path d=\"M16 8V5a2 2 0 0 1 2-2\" /> <circle cx=\"16\" cy=\"13\" r=\".5\" /> <circle cx=\"18\" cy=\"3\" r=\".5\" /> <circle cx=\"20\" cy=\"21\" r=\".5\" /> <circle cx=\"20\" cy=\"8\" r=\".5\" />", "chart-column": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"M18 17V9\" /> <path d=\"M13 17V5\" /> <path d=\"M8 17v-3\" />", "camera": "<path d=\"M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z\" /> <circle cx=\"12\" cy=\"13\" r=\"3\" />", "zap": "<path d=\"M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z\" />", "crown": "<path d=\"M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z\" /> <path d=\"M5 21h14\" />", "check": "<path d=\"M20 6 9 17l-5-5\" />", "triangle-alert": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "x": "<path d=\"M18 6 6 18\" /> <path d=\"m6 6 12 12\" />", "swords": "<path d=\"m13 19 6-6\" /> <path d=\"M14.5 17.5 3.586 6.586A2 2 0 013 5.172V3h2.172a2 2 0 011.414.586L17.5 14.5\" /> <path d=\"m14.828 6.172 2.586-2.586A2 2 0 0118.828 3H21v2.172a2 2 0 01-.586 1.414l-2.586 2.586\" /> <path d=\"m16 16 4 4\" /> <path d=\"m19 21 2-2\" /> <path d=\"m5 14 4 4\" /> <path d=\"m5 21-2-2\" /> <path d=\"M7.5 16.5 4 20\" />", "trending-up": "<path d=\"M16 7h6v6\" /> <path d=\"m22 7-8.5 8.5-5-5L2 17\" />", "trending-down": "<path d=\"M16 17h6v-6\" /> <path d=\"m22 17-8.5-8.5-5 5L2 7\" />", "minus": "<path d=\"M5 12h14\" />", "arrow-right": "<path d=\"M5 12h14\" /> <path d=\"m12 5 7 7-7 7\" />"};
+const ICONS = {"brain-circuit": "<path d=\"M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z\" /> <path d=\"M9 13a4.5 4.5 0 0 0 3-4\" /> <path d=\"M6.003 5.125A3 3 0 0 0 6.401 6.5\" /> <path d=\"M3.477 10.896a4 4 0 0 1 .585-.396\" /> <path d=\"M6 18a4 4 0 0 1-1.967-.516\" /> <path d=\"M12 13h4\" /> <path d=\"M12 18h6a2 2 0 0 1 2 2v1\" /> <path d=\"M12 8h8\" /> <path d=\"M16 8V5a2 2 0 0 1 2-2\" /> <circle cx=\"16\" cy=\"13\" r=\".5\" /> <circle cx=\"18\" cy=\"3\" r=\".5\" /> <circle cx=\"20\" cy=\"21\" r=\".5\" /> <circle cx=\"20\" cy=\"8\" r=\".5\" />", "chart-column": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"M18 17V9\" /> <path d=\"M13 17V5\" /> <path d=\"M8 17v-3\" />", "camera": "<path d=\"M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z\" /> <circle cx=\"12\" cy=\"13\" r=\"3\" />", "zap": "<path d=\"M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z\" />", "crown": "<path d=\"M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z\" /> <path d=\"M5 21h14\" />", "check": "<path d=\"M20 6 9 17l-5-5\" />", "triangle-alert": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "x": "<path d=\"M18 6 6 18\" /> <path d=\"m6 6 12 12\" />", "swords": "<path d=\"m13 19 6-6\" /> <path d=\"M14.5 17.5 3.586 6.586A2 2 0 013 5.172V3h2.172a2 2 0 011.414.586L17.5 14.5\" /> <path d=\"m14.828 6.172 2.586-2.586A2 2 0 0118.828 3H21v2.172a2 2 0 01-.586 1.414l-2.586 2.586\" /> <path d=\"m16 16 4 4\" /> <path d=\"m19 21 2-2\" /> <path d=\"m5 14 4 4\" /> <path d=\"m5 21-2-2\" /> <path d=\"M7.5 16.5 4 20\" />", "trending-up": "<path d=\"M16 7h6v6\" /> <path d=\"m22 7-8.5 8.5-5-5L2 17\" />", "trending-down": "<path d=\"M16 17h6v-6\" /> <path d=\"m22 17-8.5-8.5-5 5L2 7\" />", "minus": "<path d=\"M5 12h14\" />", "arrow-right": "<path d=\"M5 12h14\" /> <path d=\"m12 5 7 7-7 7\" />", "settings": "<path d=\"M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" />"};
 Object.assign(ICONS, {"monitor": "<rect width=\"20\" height=\"14\" x=\"2\" y=\"3\" rx=\"2\" /> <line x1=\"8\" x2=\"16\" y1=\"21\" y2=\"21\" /> <line x1=\"12\" x2=\"12\" y1=\"17\" y2=\"21\" />", "scan-line": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <path d=\"M7 12h10\" />", "picture-in-picture-2": "<path d=\"M21 9V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h4\" /> <rect width=\"10\" height=\"7\" x=\"12\" y=\"13\" rx=\"2\" />", "list-filter": "<path d=\"M2 5h20\" /> <path d=\"M6 12h12\" /> <path d=\"M9 19h6\" />"});
+Object.assign(ICONS, {"chevron-down": "<path d=\"m6 9 6 6 6-6\" />", "circle-check": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"m16 9-5.5 5.5L8 12\" />", "circle-alert": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <line x1=\"12\" x2=\"12\" y1=\"8\" y2=\"12\" /> <line x1=\"12\" x2=\"12.01\" y1=\"16\" y2=\"16\" />", "eye": "<path d=\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" />", "eye-off": "<path d=\"M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49\" /> <path d=\"M14.084 14.158a3 3 0 0 1-4.242-4.242\" /> <path d=\"M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143\" /> <path d=\"m2 2 20 20\" />", "copy": "<rect width=\"14\" height=\"14\" x=\"8\" y=\"8\" rx=\"2\" ry=\"2\" /> <path d=\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\" />"});
+Object.assign(ICONS, {"info": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 16v-4\" /> <path d=\"M12 8h.01\" />", "plus": "<path d=\"M5 12h14\" /> <path d=\"M12 5v14\" />", "flame": "<path d=\"M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4\" />", "sword": "<path d=\"m11 19-6-6\" /> <path d=\"m5 21-2-2\" /> <path d=\"m8 16-4 4\" /> <path d=\"M9.5 17.5 20.414 6.586A2 2 0 0021 5.172V3h-2.172a2 2 0 00-1.414.586L6.5 14.5\" />", "skull": "<path d=\"m12.5 17-.5-1-.5 1h1z\" /> <path d=\"M15 22a1 1 0 0 0 1-1v-1a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20v1a1 1 0 0 0 1 1z\" /> <circle cx=\"15\" cy=\"12\" r=\"1\" /> <circle cx=\"9\" cy=\"12\" r=\"1\" />", "users": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <path d=\"M16 3.128a4 4 0 0 1 0 7.744\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" />", "footprints": "<path d=\"M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z\" /> <path d=\"M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z\" /> <path d=\"M16 17h4\" /> <path d=\"M4 13h4\" />"});
 const ic = n => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n] || ''}</svg>`;
 const hydrate = root => (root || document).querySelectorAll('i[data-i]').forEach(e => e.outerHTML = ic(e.dataset.i));
 const $ = id => document.getElementById(id);
@@ -206,7 +418,7 @@ const _pc=c=>{if(/[a-zA-Z]/.test(c))return c.toLowerCase();if(c<'\u4e00'||c>'\u9
 const pyOf = s => [...String(s || '')].map(_pc).join('');
 const withPy = items => (items.forEach(x => { x._py = pyOf(x.name) + ' ' + pyOf(x.title || ''); }), items);
 
-const TOKEN = new URLSearchParams(location.search).get('token') || '';
+let TOKEN = new URLSearchParams(location.search).get('token') || localStorage.getItem('hextech_token') || '';
 async function api(p, opts = {}) {
   if (TOKEN) opts.headers = { ...(opts.headers || {}), 'X-Token': TOKEN };
   const r = await fetch(p, opts);
@@ -233,7 +445,7 @@ function autocomplete(inputId, dropId, getSource, onPick) {
     hits.forEach(h => {
       const d = document.createElement('div');
       d.className = 'opt';
-      d.innerHTML = `${h.icon ? `<img class="oic" src="${esc(h.icon)}" alt="" onerror="this.remove()">` : ''}<span>${esc(h.name)}${h.title ? ' · ' + esc(h.title) : ''}${h.tier ? `<span class="tier ${esc(h.tier)}">${esc(h.tier)}</span>` : ''}</span>` +
+      d.innerHTML = `${h.icon ? `<img class="oic" src="${esc(h.icon)}" alt="" onerror="this.remove()">` : ''}<span>${esc(h.name)}${h.title ? ' · ' + esc(h.title) : ''}${h.tier ? `<span class="tier ${esc(h.tier)}">${esc(h.tier)}</span>` : ''}${h.desc ? `<span class="od">${esc(h.desc)}</span>` : ''}</span>` +
         (h.wr ? `<small>${pct(h.wr)}${h.tm ? ' · ' + fmtGames(h.tm) : ''}</small>` : '');
       d.onmousedown = e => { e.preventDefault(); pick(h); };
       drop.appendChild(d);
@@ -259,15 +471,16 @@ function renderChampCard(d) {
     ? d.buffs.map(b => `<span class="pill ${b.tone === 'up' ? 'up' : b.tone === 'down' ? 'down' : ''}">${esc(b.label)} ${esc(b.value)} ${ic(b.tone === 'up' ? 'trending-up' : b.tone === 'down' ? 'trending-down' : 'minus')}</span>`).join('')
     : '<span class="stat">本版本无平衡性调整</span>';
   const tops = d.topAugments.map(a => `<button class="chip aug-fill" data-name="${esc(a.name)}">${a.icon ? `<img class="cic" src="${esc(a.icon)}" alt="" onerror="this.remove()">` : ''}${esc(a.name)}<small>${pct(a.wr)}</small></button>`).join('');
-  $('champCard').innerHTML = `<div class="champ"><div class="mono">${mono}</div><div style="flex:1">
+  $('champCard').innerHTML = `<div class="champ"><div class="mono">${mono}</div><div class="cinfo">
     <h2>${esc(c.name)} · ${esc(c.title)}<span class="tier ${esc(c.tier)}">${esc(c.tier)}</span></h2>
-    <div class="stat">胜率 ${pct(c.wr, 2)} · ${c.tm.toLocaleString()} 场</div>
-    <div class="pills">${buffs}</div>
-    <div class="stat" style="margin-top:12px">该英雄常用海克斯（仅快捷填入，不限制候选范围）</div><div class="chips" id="topSort"></div><div class="chips" id="tops"></div></div></div>`;
-  renderTops();
-  $('champCard').querySelectorAll('.aug-fill').forEach(b => {
-    b.onclick = () => { for (let i = 0; i < 3; i++) if (!$('aug' + i).value) { $('aug' + i).value = b.dataset.name; renderCands(); return; } toast('三个位置已满'); };
-  });
+    <div class="stat">${c.tm.toLocaleString()} 场${d.source === 'arammeta-backup' ? ' · <span style="color:var(--gold)">备用数据(台服)</span>' : ''}</div>
+    <div class="pills">${buffs}</div></div>
+    <div class="cwr"><b data-count="${(c.wr * 100).toFixed(1)}">${pct(c.wr)}</b><small>该英雄胜率</small></div></div>
+    <div class="sec"><div class="sh">${ic('flame')}<span>常用海克斯</span><small>点卡片填入空位 · 不限制候选范围</small></div><div id="topSort" style="margin-top:12px"></div><div id="tops"></div></div>
+    <details class="sec" open><summary class="sh">${ic('sword')}<span>出装推荐</span><small id="bsrc">点击收起 / 展开</small><span class="chev">${ic('chevron-down')}</span></summary><div id="builds"><span class="stat">加载中…</span></div></details>`;
+  S.champWr = c.wr; renderTops(); fx($('champCard'));
+  renderBuilds(c.name).catch(() => {});
+  $('champCard').querySelectorAll('.aug-fill').forEach(b => { b.onclick = () => fillSlot(b.dataset.name); });
 }
 async function selectChampion(h) {
   const my = ++S.seq;
@@ -297,9 +510,11 @@ function renderResult(d) {
     const eff = r.eff != null ? r.eff : (hasWr ? r.champWr : r.globalWr);
     const w = r.score != null ? Math.min(100, r.score / 4 * 100) : Math.max(4, Math.min(100, (eff - 0.4) / 0.2 * 100));
     const icon = (S.augIcon || {})[r.name];
+    const desc = (S.augDesc || {})[r.name];
     const raw = hasWr ? `原始 ${pct(r.champWr)}${r.champTm ? ' · ' + fmtGames(r.champTm) : ''}` : `全局 ${pct(r.globalWr)}`;
     return `<div class="rc${isPick ? ' pick' : ''}${hasWr ? '' : ' nodata'}" style="animation-delay:${i * .1}s"><div class="rank">${i + 1}</div>${isPick ? `<div class="crown">${ic('crown')}</div>` : ''}
       <h3>${icon ? `<img class="ric" src="${esc(icon)}" alt="" onerror="this.remove()">` : ''}${esc(r.name)}</h3>
+      ${desc ? `<div class="desc">${esc(desc)}</div>` : ''}
       <div class="big" data-count="${(eff * 100).toFixed(1)}">${pct(eff)}</div>
       <div class="stat">修正胜率 · ${raw}</div>${hasWr ? '' : '<div class="tag">该英雄无对局数据</div>'}
       <div class="bar"><div class="fill" style="width:0" data-w="${w}"></div></div>
@@ -318,14 +533,17 @@ function renderResult(d) {
 function showResult(html, target = $('out')) {
   target.innerHTML = html;
   requestAnimationFrame(() => { target.querySelectorAll('.fill').forEach(f => f.style.width = f.dataset.w + '%'); fx(target); });
-  target.querySelectorAll('.mark').forEach(b => b.onclick = () => {
-    const n = b.dataset.name;
-    if (!S.picked.includes(n)) S.picked.push(n);
-    renderPicked();
-    [0, 1, 2].forEach(i => $('aug' + i).value = ''); renderCands();
-    $('out').innerHTML = `<div class="stat">已记录「${esc(n)}」，输入下一轮候选继续。</div>`;
-    toast('已记入本局已选'); window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+  target.querySelectorAll('.mark').forEach(b => { b.onclick = () => markPicked(b.dataset.n, true); });
+}
+function markPicked(n, fromPip) {
+  if (!S.picked.includes(n)) S.picked.push(n);
+  renderPicked();
+  [0, 1, 2].forEach(i => $('aug' + i).value = ''); renderCands();
+  $('out').innerHTML = `<div class="stat">已记录「${esc(n)}」，输入下一轮候选继续。</div>`;
+  toast('已记入本局已选');
+  if (S.pipRes) S.pipRes.innerHTML = `<div class="stat">已记录「${esc(n)}」，等待下一轮…</div>`;
+  if (S.pipAuto && S.pipAuto.checked) setAuto(true);
+  if (!fromPip) window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ---------- 截图 ----------
@@ -338,6 +556,8 @@ function handleShot(file) {
     cv.width = Math.round(img.width * sc); cv.height = Math.round(img.height * sc);
     cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
     shotDataUrl = cv.toDataURL('image/jpeg', 0.72);
+    S.fullFrame = cropFrame(img, img.width, img.height, img.width / img.height >= 1.5);   // 原始分辨率；整屏截图只取中部横带，更快更准
+    getOcrWorker().catch(() => {});
     const pv = $('shotPreview'); pv.src = shotDataUrl; pv.style.display = 'block';
     URL.revokeObjectURL(img.src); $('ocrMsg').textContent = '';
   };
@@ -345,28 +565,254 @@ function handleShot(file) {
 }
 $('shotInput').onchange = e => handleShot(e.target.files[0]);
 document.addEventListener('paste', e => { const f = [...(e.clipboardData?.files || [])].find(f => f.type.startsWith('image/')); if (f) handleShot(f); });
-const shot = $('shot');
+const shot = $('scan');
 ['dragenter', 'dragover'].forEach(t => shot.addEventListener(t, e => { e.preventDefault(); shot.classList.add('over'); }));
 ['dragleave', 'drop'].forEach(t => shot.addEventListener(t, e => { e.preventDefault(); shot.classList.remove('over'); }));
 shot.addEventListener('drop', e => handleShot(e.dataTransfer.files[0]));
 
-$('ocrGo').onclick = async () => {
-  const champ = $('champInput').value.trim();
-  if (!champ) return toast('请先选英雄');
-  if (!shotDataUrl) return toast('请先上传或粘贴截图');
-  const btn = $('ocrGo'); btn.disabled = true; btn.textContent = '识别中…'; skeleton();
+// ---- 本地识别：词典定位 + 三张卡标题挑选（页面与测试共用同一份代码）----
+const normT = s => String(s ?? '').replace(/[^\u4e00-\u9fffA-Za-z0-9]/g, '');
+function levT(a, b) {
+  const m = a.length, n = b.length; if (!m) return n; if (!n) return m;
+  let prev = Array.from({ length: n + 1 }, (_, j) => j);
+  for (let i = 1; i <= m; i++) { const cur = [i]; for (let j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); prev = cur; }
+  return prev[n];
+}
+// 名字越短越严格：2 字必须一致，3~4 字最多错 1 字，5 字以上最多错 2 字
+const maxErrT = L => L <= 2 ? 0 : L <= 4 ? 1 : 2;
+// 把一行 OCR 结果拆成「字 + 横坐标」，用于合并行时仍能分辨三张卡的位置
+function lineCharsT(ln) {
+  const chars = [];
+  for (const w of (ln.words || [])) {
+    const t = normT(w.text); if (!t) continue; const { x0, x1 } = w.bbox;
+    [...t].forEach((ch, i) => chars.push({ ch, x: x0 + (x1 - x0) * (i + .5) / t.length }));
+  }
+  if (!chars.length) { const t = normT(ln.text), { x0, x1 } = ln.bbox; [...t].forEach((ch, i) => chars.push({ ch, x: x0 + (x1 - x0) * (i + .5) / t.length })); }
+  return chars;
+}
+function spotLineT(ln, dictN, errBonus) {
+  const chars = lineCharsT(ln), t = chars.map(c => c.ch).join(''), out = [];
+  if (t.length < 2) return out;
+  for (const [name, n] of dictN) {
+    const L = n.length, meS = maxErrT(L), me = meS + (errBonus || 0);
+    if (t.length < L - me) continue;
+    let best = 99, bi = 0, bw = 0;
+    for (let w = Math.max(2, L - meS); w <= L + meS; w++) for (let i = 0; i + w <= t.length; i++) {
+      const e = levT(n, t.slice(i, i + w)); if (e < best) { best = e; bi = i; bw = w; } if (best === 0) break;
+    }
+    if (best > me) continue;
+    const xs = chars.slice(bi, bi + bw).map(c => c.x);
+    // 分数 = 名字被匹配的字数 / max(名字长度, 整行长度)：名字只解释了行里一小部分时（如「虹吸」vs「灵瑰虹吸」）得分更低
+    out.push({ name, errs: best, score: (L - best) / Math.max(L, t.length), xc: xs.reduce((a, b) => a + b, 0) / xs.length });
+  }
+  return out;
+}
+function pickStrictT(lines, dictN, errBonus) {
+  const cands = [];
+  for (const ln of lines) {
+    const { y0, y1 } = ln.bbox, h = y1 - y0;
+    for (const m of spotLineT(ln, dictN, errBonus)) cands.push({ ...m, yc: (y0 + y1) / 2, h });
+  }
+  if (!cands.length) return [];
+  const byScore = (a, b) => b.score - a.score || b.name.length - a.name.length;
+  cands.sort(byScore);
+  const uniq = new Map(); for (const c of cands) if (!uniq.has(c.name)) uniq.set(c.name, c);
+  const list = [...uniq.values()], anchor = list[0], tol = Math.max(anchor.h * 0.9, 12);
+  const picked = [];
+  for (const c of list.filter(c => Math.abs(c.yc - anchor.yc) <= tol)) if (picked.every(p => Math.abs(p.xc - c.xc) > Math.max(c.h, p.h) * 2.5)) picked.push(c);
+  return picked.slice(0, 3).sort((a, b) => a.xc - b.xc);
+}
+function pickCardsT(lines, dictN) {
+  const picked = pickStrictT(lines, dictN, 0);
+  if (picked.length === 2) {
+    // 第三张标题可能有 2 个错字（如游戏字体 吞噬→知叭）：在同一横带上放宽一档补一次，位置不同才算
+    const anchor = picked[0], tol = Math.max(anchor.h * 0.9, 12);
+    const band = lines.filter(ln => Math.abs((ln.bbox.y0 + ln.bbox.y1) / 2 - anchor.yc) <= tol * 2);
+    for (const c of pickStrictT(band, dictN, 1)) {
+      if (picked.some(q => q.name === c.name)) continue;
+      if (picked.every(q => Math.abs(q.xc - c.xc) > Math.max(c.h, q.h) * 2.5)) picked.push(c);
+      if (picked.length >= 3) break;
+    }
+    picked.sort((a, b) => a.xc - b.xc);
+  }
+  return picked.slice(0, 3);
+}
+
+// ---- 自动识别英雄：选人界面中央大字最准，按文字大小加权 ----
+function detectChampionFromLines(lines) {
+  if (!S.champions.length) return null;
+  const dict = S.champions.map(c => [c.name, normT(c.name)]).filter(([, n]) => n.length >= 2);
+  let best = null;
+  for (const ln of lines) {
+    const t = normT(ln.text || '');
+    if (t.length < 2) continue;
+    const h = Math.max(0, (ln.bbox.y1 - ln.bbox.y0) || 0);
+    for (const [name, n] of dict) {
+      let hit = false, base = 0;
+      if (t.includes(n)) { hit = true; base = n.length / t.length; }
+      else if (n.length >= 3) {
+        const maxE = (n.length >= 4 && h >= 28) ? 2 : 1;  // 中央大字：游戏字体易错 2 字
+        for (let i = 0; i + n.length <= t.length + 1 && i < t.length; i++) {
+          const e = levT(n, t.slice(i, i + n.length));
+          if (e <= maxE) { hit = true; base = (n.length - e) / t.length; break; }
+        }
+      }
+      if (hit) { const q = base * (1 + h / 80); if (!best || q > best.q) best = { name, q }; }
+    }
+  }
+  return best && best.q >= 0.35 ? best : null;
+}
+async function detectChampion() {
+  if (!S.fullFrame || !S.champions.length) return null;
+  const w = await getOcrWorker();
+  const { data } = await w.recognize(prepForOcr(S.fullFrame));
+  return detectChampionFromLines((data.lines || []).map(l => ({ text: l.text, bbox: l.bbox })));
+}
+
+// ---- Tesseract.js 懒加载（首次识别时才下载，之后 IndexedDB 缓存）----
+const OCR_V = '5.1.1', OCR_BASES = ['https://cdn.jsdelivr.net/npm/', 'https://fastly.jsdelivr.net/npm/', 'https://unpkg.com/'];
+const loadScript = src => new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => rej(new Error('脚本加载失败')); document.head.appendChild(s); });
+function setEngine(s) {
+  S.engine = s; const r = $('rowLoc'); if (!r) return;
+  r.className = 'srow ' + (s === '就绪' ? 'ok' : s === '加载失败' ? 'no' : '');
+  $('siLoc').innerHTML = ic(s === '就绪' ? 'circle-check' : s === '加载失败' ? 'circle-alert' : 'scan-line'); $('stLoc').textContent = s;
+}
+async function getOcrWorker() {
+  if (S.ocrW) return S.ocrW;
+  if (S.ocrP) return S.ocrP;
+  S.ocrP = (async () => {
+    let last;
+    for (const b of OCR_BASES) {
+      try {
+        setEngine('加载中…');
+        if (!window.Tesseract) await loadScript(`${b}tesseract.js@${OCR_V}/dist/tesseract.min.js`);
+        const w = await Promise.race([
+          Tesseract.createWorker('chi_sim', 1, { workerPath: `${b}tesseract.js@${OCR_V}/dist/worker.min.js`, corePath: `${b}tesseract.js-core@${OCR_V}/`,
+            langPath: `${b}@tesseract.js-data/chi_sim/4.0.0_best_int`, gzip: true, logger: m => { if (S.ocrProg) S.ocrProg(m); } }),
+          new Promise((_, rej) => setTimeout(() => rej(new Error('加载超时')), window.OCR_TIMEOUT || 120000))]);
+        await w.setParameters({ tessedit_pageseg_mode: '11' });   // 稀疏文本：卡片标题分散在三列
+        S.ocrW = w; setEngine('就绪'); return w;
+      } catch (e) { last = e; }
+    }
+    setEngine('加载失败'); S.ocrP = null; throw last || new Error('识别引擎加载失败');
+  })();
+  S.ocrP.catch(() => { S.ocrP = null; });
+  return S.ocrP;
+}
+// 预处理：小于 1800 宽放大到 1920（实测放大后识别率明显更高），反色灰度（亮字暗底 → 暗字亮底）
+function prepForOcr(src) {
+  const w = src.width, h = src.height, sc = Math.abs(w - 1920) / 1920 < .1 ? 1 : 1920 / w;   // 统一到约 1920 宽：小图放大识别率更高，大图缩小更快
+  const cv = document.createElement('canvas'); cv.width = Math.round(w * sc); cv.height = Math.round(h * sc);
+  const ctx = cv.getContext('2d', { willReadFrequently: true }); ctx.imageSmoothingQuality = 'high'; ctx.drawImage(src, 0, 0, cv.width, cv.height);
+  const id = ctx.getImageData(0, 0, cv.width, cv.height), d = id.data;
+  for (let i = 0; i < d.length; i += 4) { const g = 255 - (d[i] * .299 + d[i + 1] * .587 + d[i + 2] * .114); d[i] = d[i + 1] = d[i + 2] = g; }
+  ctx.putImageData(id, 0, 0); return cv;
+}
+async function localRecognize(onProg) {
+  if (!S.fullFrame) throw new Error('没有可识别的画面');
+  if (!S.augments.length) throw new Error('海克斯名单还没加载');
+  S.ocrProg = onProg;
+  const w = await getOcrWorker();
+  const { data } = await w.recognize(prepForOcr(S.fullFrame));
+  if (S.dictKey !== S.version + ':' + S.augments.length) { S.dictN = S.augments.map(a => [a.name, normT(a.name)]).filter(([, n]) => n.length >= 2); S.dictKey = S.version + ':' + S.augments.length; }
+  const picked = pickCardsT((data.lines || []).map(l => ({ text: l.text, bbox: l.bbox, words: l.words })), S.dictN);
+  return { cards: picked.map(c => ({ ocr: c.name, matched: c.name, score: +c.score.toFixed(2) })) };
+}
+
+const runOcr = $('ocrGo').onclick = async () => {
+  S.lastOcrOk = false;
+  let champ = $('champInput').value.trim();
+  const btn = $('ocrGo'); btn.disabled = true; btn.textContent = '识别中…'; if (!S.silent) skeleton();
+  const say = t => { if (!S.silent) { $('ocrMsg').textContent = t; if (S.pipMsg) S.pipMsg.textContent = t; } };
+  const post = (url, body) => api(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ champion: champ, version: S.version, picked: S.picked, mode: S.mode, ...body }) });
+  const done = () => { btn.disabled = false; btn.textContent = '识别并推荐'; };
   try {
-    const d = await api('/api/ocr-recommend', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ champion: champ, image: shotDataUrl, version: S.version, picked: S.picked, mode: S.mode }) });
-    d.cards.forEach((c, i) => { if (c.matched) $('aug' + i).value = c.matched; }); renderCands();
-    $('ocrMsg').innerHTML = d.cards.map(c => { const ic = c.matched && (S.augIcon || {})[c.matched]; return `${ic ? `<img class="cic" src="${esc(ic)}" alt="" onerror="this.remove()"> ` : ''}${esc(c.ocr || '?')}${ic('arrow-right')}<b>${esc(c.matched || '未匹配')}</b>`; }).join(' ｜ ');
-    showResult(renderResult(d.recommend)); pipNotify(d.recommend);
+    let cards = null, rec, via = '', t0 = performance.now();
+    if (S.silent) {
+      // ===== 持续监测：一次 OCR 同时做英雄跟随 + 卡片识别 =====
+      if (!S.fullFrame) { done(); return false; }
+      let lines;
+      try {
+        const w = await getOcrWorker();
+        const { data } = await w.recognize(prepForOcr(S.fullFrame));
+        lines = (data.lines || []).map(l => ({ text: l.text, bbox: l.bbox, words: l.words }));
+      } catch (e) { console.warn('画面识别失败：', e); done(); return false; }
+      // 选人阶段：英雄自动识别 / 换英雄跟随（进对局后 lastSig 非空即停；手动指定的不覆盖）
+      if (!S.lastSig && (!champ || S.heroAuto)) {
+        const d = detectChampionFromLines(lines);
+        if (d && d.name !== champ) {
+          if (!champ || S.heroCand === d.name) {  // 首次直接采用；切换需连续两轮一致防抖
+            S.heroCand = null;
+            const prev = champ;
+            champ = d.name;
+            $('champInput').value = champ; S.heroAuto = true; syncPipChamp(champ);
+            if (prev && prev !== champ && S.picked.length) { S.picked = []; renderPicked(); }  // 换英雄=新对局，清已选
+            const h = S.champions.find(x => x.name === champ);
+            if (h) selectChampion(h);
+            toast(prev ? `检测到换英雄：${prev} → ${champ}，已切换` : `已自动识别英雄：${champ}`);
+          } else S.heroCand = d.name;
+        } else S.heroCand = null;
+        champ = $('champInput').value.trim();
+      }
+      if (!champ) { if (S.pipMsg) S.pipMsg.textContent = '监测中…（等待选人）'; done(); return false; }
+      if (S.dictKey !== S.version + ':' + S.augments.length) { S.dictN = S.augments.map(a => [a.name, normT(a.name)]).filter(([, n]) => n.length >= 2); S.dictKey = S.version + ':' + S.augments.length; }
+      const hit = pickCardsT(lines, S.dictN).map(c => ({ ocr: c.name, matched: c.name, score: +c.score.toFixed(2) }));
+      cards = (hit.length >= 3 || (hit.length >= 2 && !S.stat.ocr)) ? hit : null;
+      via = '本地识别';
+      // 无卡→重置签名等下一轮；卡片未变→跳过不重复推荐（刷新/新一轮自动重识）
+      if (!cards) {
+        if (S.lastSig) { S.lastSig = null; if (S.pipMsg) S.pipMsg.textContent = '监测中…（等待下一轮三选一）'; }
+        done(); return false;
+      }
+      const sig = cards.map(c => c.matched).sort().join('|');
+      if (sig === S.lastSig) { done(); return false; }
+      S.lastSig = sig;
+      rec = await post('/api/recommend', { augments: cards.map(c => c.matched) });
+    } else {
+      // ===== 手动模式 =====
+      // 点识别时：当前英雄是自动识别来的（或还没选），就按画面重识；手动指定的不覆盖
+      if (S.fullFrame && (!champ || S.heroAuto)) {
+        say('正在识别英雄…');
+        try {
+          const d = await detectChampion();
+          if (d && d.name !== champ) {
+            const prev = champ;
+            champ = d.name;
+            $('champInput').value = champ; S.heroAuto = true; syncPipChamp(champ);
+            if (prev && S.picked.length) { S.picked = []; renderPicked(); }
+            const h = S.champions.find(x => x.name === champ);
+            if (h) selectChampion(h);
+            toast(prev ? `已切换英雄：${prev} → ${champ}` : `已识别英雄：${champ}`);
+          }
+        } catch (e) { console.warn('英雄识别失败：', e); }
+      }
+      if (!champ) { done(); return toast('请先选英雄'); }
+      if (!S.fullFrame && !shotDataUrl) { done(); return toast('请先上传或粘贴截图'); }
+      // 1) 本地识别优先：不耗 AI 额度
+      try {
+        say('本地识别中…');
+        const r = await localRecognize(m => { if (m.status && /load|init/.test(m.status)) say('加载识别引擎 ' + Math.round((m.progress || 0) * 100) + '%（首次使用，之后会缓存）'); });
+        if (r.cards.length >= 3 || (r.cards.length >= 2 && !S.stat.ocr)) { cards = r.cards; via = '本地识别'; }
+      } catch (e) { console.warn('本地识别失败：', e); }
+      if (cards) rec = await post('/api/recommend', { augments: cards.map(c => c.matched) });
+      else {
+        // 2) AI 兜底（仅手动模式；静默监测不耗 AI 额度）
+        if (!S.stat.ocr) throw new Error('本地没认出足够的卡片，且未启用 AI 兜底。请手动输入，或换更清晰的画面');
+        say('本地没认全，交给 AI 识别…');
+        const d = await post('/api/ocr-recommend', { image: shotDataUrl });
+        cards = d.cards; rec = d.recommend; via = 'AI 识别';
+      }
+    }
+    [0, 1, 2].forEach(i => { $('aug' + i).value = (cards[i] && cards[i].matched) || ''; }); renderCands();
+    $('ocrMsg').innerHTML = `<span class="badge${via === 'AI 识别' ? ' local' : ''}">${via} · ${((performance.now() - t0) / 1000).toFixed(1)}s</span>` + cards.map(c => { const ic0 = c.matched && (S.augIcon || {})[c.matched]; return `${ic0 ? `<img class="cic" src="${esc(ic0)}" alt="" onerror="this.remove()"> ` : ''}<b>${esc(c.matched || '未匹配')}</b>`; }).join(' ｜ ');
+    showResult(renderResult(rec)); pipNotify(rec); if (S.silent) pipAlert(); S.lastOcrOk = true;
   } catch (e) {
     const msg = /AI binding/.test(e.message) ? 'Worker 未配置 AI binding（dashboard → Settings → Bindings → 添加 AI）' : e.message;
-    $('ocrMsg').innerHTML = `<span style="color:var(--down)">识别失败：${esc(msg)}</span>`; if (S.pipMsg) S.pipMsg.textContent = '识别失败：' + msg;
+    if (!S.silent) $('ocrMsg').innerHTML = `<span style="color:var(--down)">识别失败：${esc(msg)}</span>`;
+    if (S.pipMsg) S.pipMsg.textContent = S.silent ? '监测中…（还没看到三选一）' : '识别失败：' + msg;
   }
   btn.disabled = false; btn.textContent = '识别并推荐';
-};
+}
 
 // ---------- 推荐 ----------
 $('clearSlots').onclick = () => { [0, 1, 2].forEach(i => $('aug' + i).value = ''); renderCands(); };
@@ -381,7 +827,7 @@ $('go').onclick = async () => {
     showResult(renderResult(d));
   } catch (e) { $('out').innerHTML = `<div class="warn">请求失败：${esc(e.message)}</div>`; }
   btn.disabled = false; btn.innerHTML = ic('zap') + '推荐最优';
-};
+}
 
 // ---------- 初始化 ----------
 async function init() {
@@ -393,16 +839,16 @@ async function init() {
   const load = async () => {
     const [c, a] = await Promise.all([api(`/api/champions?version=${S.version}`), api(`/api/augments?version=${S.version}`)]);
     S.champions = withPy(c.items); S.augments = withPy(a.items);
-    S.augIcon = {}; S.augments.forEach(a => { if (a.icon) S.augIcon[a.name] = a.icon; }); S.augById = new Map(S.augments.map(a => [a.id, a])); updateFilterLabel();
+    S.augIcon = {}; S.augDesc = {}; S.augments.forEach(a => { if (a.icon) S.augIcon[a.name] = a.icon; if (a.desc) S.augDesc[a.name] = a.desc; }); S.augById = new Map(S.augments.map(a => [a.id, a])); updateFilterLabel();
   };
   await load();
-  sel.onchange = async () => { S.version = sel.value; S.seq++; S.allowed = new Set(); $('champCard').innerHTML = ''; $('champInput').value = ''; await load(); };
-  autocomplete('champInput', 'champDrop', () => S.champions, selectChampion);
+  sel.onchange = async () => { S.version = sel.value; S.allowed = new Set(); resetAll(); await load(); };
+  autocomplete('champInput', 'champDrop', () => S.champions, h => { S.heroAuto = false; S.heroCand = null; selectChampion(h); });
   [0, 1, 2].forEach(i => autocomplete('aug' + i, 'drop' + i, augSource, renderCands));
   renderPicked();
   const qs = new URLSearchParams(location.search), pre = qs.get('champion'), draft = qs.get('draft');
   if (draft) { const b = $('draftBanner'); b.style.display = 'block'; b.innerHTML = `<b>第 ${esc(draft)} 轮强化选择</b><div class="stat">在下方填入三个候选后点推荐</div>`; }
-  if (pre) { const h = S.champions.find(x => x.name === pre); if (h) selectChampion(h); else $('champInput').value = pre; }
+  if (pre) { const h = S.champions.find(x => x.name === pre); S.heroAuto = false; if (h) selectChampion(h); else $('champInput').value = pre; }
 }
 // ---------- 过滤 / 模式 / 特效 ----------
 const augSource = () => (S.only && S.allowed.size) ? S.augments.filter(a => S.allowed.has(a.id)) : S.augments;
@@ -419,7 +865,7 @@ function fx(root) {
   root.querySelectorAll('.rc').forEach(c => {
     const pk = c.classList.contains('pick') ? ' translateY(-6px)' : '';
     c.onmousemove = e => { const r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
-      c.style.transform = `perspective(700px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg)${pk}`; c.style.setProperty('--mx', (x + .5) * 100 + '%'); c.style.setProperty('--my', (y + .5) * 100 + '%'); };
+      c.style.transform = `perspective(700px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg)${pk}`; c.style.transform = `perspective(700px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg)${pk}`; c.style.setProperty('--mx', (x + .5) * 100 + '%'); c.style.setProperty('--my', (y + .5) * 100 + '%'); };
     c.onmouseleave = () => { c.style.transform = ''; };
   });
   const p = root.querySelector('.rc.pick');
@@ -433,7 +879,8 @@ function fx(root) {
 
 // ---------- 候选预览（实时按修正胜率排序） / 能力探测 ----------
 function renderCands() {
-  const el = $('cands'); if (!el) return;
+  const el = $('cands'); if (!el) return; markTopSlots();
+  [0, 1, 2].forEach(i => { const c = $('augClear' + i); if (c) c.classList.toggle('show', !!$('aug' + i).value); });
   const rows = [0, 1, 2].map(i => $('aug' + i).value.trim()).filter(Boolean).map(n => {
     const a = S.augments.find(x => x.name === n);
     if (!a) return { bad: n };
@@ -446,31 +893,107 @@ function renderCands() {
   el.innerHTML = '<div class="stat">当前候选 · 按修正胜率排序（小样本向全局收缩）' + (S.picked.length && S.mode === 'wr' ? ' · 纯胜率模式不评估与已选的搭配' : '') + '</div>' +
     [...ok, ...rows.filter(r => r.bad)].map((r, i) => r.bad
       ? `<span class="cc bad">${ic('triangle-alert')}${esc(r.bad)}<small>未找到</small></span>`
-      : `<span class="cc${r === best ? ' best' : ''}${r.nodata ? ' nd' : ''}" style="animation-delay:${i * .06}s">${r === best ? ic('crown') : ''}${r.a.icon ? `<img src="${esc(r.a.icon)}" alt="" onerror="this.remove()">` : ''}${esc(r.a.name)} <b>${pct(r.eff)}</b><small>${r.picked ? '已选过' : r.nodata ? '该英雄无数据 · 用全局' : '原始 ' + pct(r.raw) + ' · ' + fmtGames(r.tm)}</small></span>`).join('');
+      : `<span class="cc${r === best ? ' best' : ''}${r.nodata ? ' nd' : ''}" style="animation-delay:${i * .06}s" ${tipAttr({ icon: r.a.icon, name: r.a.name, sub: r.picked ? '本局已选过' : '', desc: r.a.desc, stats: [['修正胜率', pct(r.eff)], ['全局胜率', pct(r.a.wr)]] })}>${r === best ? ic('crown') : ''}${r.a.icon ? `<img src="${esc(r.a.icon)}" alt="" onerror="this.remove()">` : ''}${esc(r.a.name)} <b>${pct(r.eff)}</b><small>${r.picked ? '已选过' : r.nodata ? '该英雄无数据 · 用全局' : '原始 ' + pct(r.raw) + ' · ' + fmtGames(r.tm)}</small></span>`).join('');
 }
 ['aug0', 'aug1', 'aug2'].forEach(id => $(id).addEventListener('input', renderCands));
 function applyStatus() {
   const jevOff = !S.stat.jev, auto = $('seg').querySelector('[data-m="auto"]');
   if (jevOff) { S.mode = 'wr'; auto.disabled = true; auto.title = '未配置 TYPESAFE_API_KEY，已降档为纯胜率排序'; }
   [...$('seg').children].forEach(x => x.classList.toggle('on', x.dataset.m === S.mode));
-  if (!S.stat.ocr) { $('ocrGo').disabled = true; $('ocrMsg').textContent = '未配置 AI binding，截图识别不可用，请手动输入'; }
+  setEngine(S.engine || '未加载');
+  const HOW = {
+    Jev: 'Worker → Settings → Variables and Secrets 添加 <code data-copy>TYPESAFE_API_KEY</code>',
+    Ocr: '可选：本地没认全时由 AI 兜底。Worker → Settings → Bindings 添加 Workers AI，变量名 <code data-copy>AI</code>',
+  };
+  const setSt = (k, ok) => {
+    $('row' + k).className = 'srow ' + (ok ? 'ok' : 'no');
+    $('si' + k).innerHTML = ic(ok ? 'circle-check' : 'circle-alert');
+    $('st' + k).textContent = ok ? '可用' : (k === 'Ocr' ? '未启用' : '未配置');
+    $('how' + k).innerHTML = HOW[k];
+  };
+  setSt('Jev', S.stat.jev); setSt('Ocr', S.stat.ocr);
 }
 
 // ---------- 常用海克斯（常用 + 高胜率） ----------
+// 点击常用海克斯 chip → 填入首个空位；只有填满最后一个(C)才滚动下去
+function fillSlot(name) {
+  for (let i = 0; i < 3; i++) {
+    const el = $('aug' + i);
+    if (!el.value) {
+      el.value = name; renderCands();
+      toast(`已填入 ${'ABC'[i]} 位：${name}`);
+      el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+      if (i === 2) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60);
+      return;
+    }
+  }
+  toast('三个位置已满');
+}
 function renderTops(key) {
   S.topKey = key = key || S.topKey || 'combo';
-  const list = [];
+  const base = S.champWr || .5, list = [];
   S.augWr.forEach((v, id) => { const a = S.augById && S.augById.get(id); if (a) list.push({ a, wr: v.wr, tm: v.tm, eff: (v.wr * v.tm + a.wr * 200) / (v.tm + 200) }); });
-  const tms = list.map(x => x.tm).sort((a, b) => a - b), med = tms[tms.length >> 1] || 0;
-  const rows = (key === 'pop' ? list.sort((a, b) => b.tm - a.tm) : key === 'wr' ? list.sort((a, b) => b.eff - a.eff)
-    : list.filter(x => x.tm >= med).sort((a, b) => b.eff - a.eff)).slice(0, 8);
-  const labels = { combo: '常用且高胜率', pop: '最常用', wr: '最高胜率' };
-  $('topSort').innerHTML = Object.entries(labels).map(([k, t]) => `<button class="chip tgl${k === key ? ' on' : ''}" data-k="${k}">${t}</button>`).join('');
-  $('topSort').querySelectorAll('.chip').forEach(b => b.onclick = () => renderTops(b.dataset.k));
-  $('tops').innerHTML = rows.length ? rows.map(r => `<button class="chip aug-fill" data-name="${esc(r.a.name)}">${r.a.icon ? `<img class="cic" src="${esc(r.a.icon)}" alt="" onerror="this.remove()">` : ''}${esc(r.a.name)}<small>${pct(r.eff)} · ${fmtGames(r.tm)}</small></button>`).join('') : '<span class="stat">暂无该英雄的海克斯数据</span>';
-  $('tops').querySelectorAll('.aug-fill').forEach(b => {
-    b.onclick = () => { for (let i = 0; i < 3; i++) if (!$('aug' + i).value) { $('aug' + i).value = b.dataset.name; renderCands(); return; } toast('三个位置已满'); };
+  const maxTm = Math.max(1, ...list.map(x => x.tm)), tms = list.map(x => x.tm).sort((a, b) => a - b), med = tms[tms.length >> 1] || 0;
+  const sorted = key === 'pop' ? list.sort((a, b) => b.tm - a.tm) : key === 'wr' ? list.sort((a, b) => b.eff - a.eff) : list.filter(x => x.tm >= med).sort((a, b) => b.eff - a.eff);
+  const cap = S.topAll ? 20 : 8, rows = sorted.slice(0, cap);
+  const tabs = [['combo', 'flame', '常用且高胜率'], ['pop', 'users', '最常用'], ['wr', 'trending-up', '最高胜率']];
+  $('topSort').innerHTML = `<div class="seg">${tabs.map(([k, i, t]) => `<button data-k="${k}" class="${k === key ? 'on' : ''}">${ic(i)}${t}</button>`).join('')}</div>`;
+  $('topSort').querySelectorAll('button').forEach(b => { b.onclick = () => renderTops(b.dataset.k); });
+  $('tops').innerHTML = rows.length ? rows.map(r => {
+    const dl = (r.eff - base) * 100, desc = r.a.desc || (S.augDesc || {})[r.a.name], heat = Math.round(r.tm / maxTm * 100);
+    return `<div class="ac" data-name="${esc(r.a.name)}">
+      <div class="ac-top"><div class="ac-ic t-${esc(r.a.tier || '')}">${r.a.icon ? `<img src="${esc(r.a.icon)}" alt="" onerror="this.remove()">` : ''}</div>
+        <div class="ac-nm"><b>${esc(r.a.name)}</b>${r.a.tier ? `<span class="tier ${esc(r.a.tier)}">${esc(r.a.tier)}</span>` : ''}</div>
+        <button class="ac-info" title="详情" aria-label="详情">${ic('info')}</button></div>
+      <div class="ac-wr"><b>${pct(r.eff)}</b><span class="d ${dl >= 0 ? 'up' : 'down'}">${dl >= 0 ? '+' : ''}${dl.toFixed(1)}pp</span></div>
+      <div class="ac-bar"><i style="width:${Math.max(6, heat)}%"></i></div>
+      <div class="ac-meta">${fmtGames(r.tm)} · 热度 ${heat}%</div>
+      ${desc ? `<div class="ac-desc">${esc(desc)}</div>` : ''}
+      <div class="ac-more"><span>专属胜率<b>${pct(r.wr)}</b></span><span>全局胜率<b>${pct(r.a.wr)}</b></span><span>样本<b>${r.tm.toLocaleString()} 场</b></span><span>较英雄均值<b>${dl >= 0 ? '+' : ''}${dl.toFixed(1)}pp</b></span></div>
+      <div class="ac-fill">${ic('plus')}点击填入</div></div>`;
+  }).join('') + (sorted.length > 8 ? `<button class="more" id="topMore">${S.topAll ? '收起' : '展开更多（' + (Math.min(20, sorted.length) - 8) + '）'}</button>` : '') : '<span class="stat">暂无该英雄的海克斯数据</span>';
+  $('tops').querySelectorAll('.ac').forEach(c => {
+    c.onclick = () => fillSlot(c.dataset.name);
+    c.querySelector('.ac-info').onclick = e => { e.stopPropagation(); c.classList.toggle('open'); };
   });
+  const mo = $('topMore'); if (mo) mo.onclick = () => { S.topAll = !S.topAll; renderTops(); };
+  markTopSlots();
+}
+function markTopSlots() {
+  const have = [0, 1, 2].map(i => $('aug' + i).value.trim()).filter(Boolean);
+  document.querySelectorAll('#tops .ac').forEach(c => c.classList.toggle('in', have.includes(c.dataset.name)));
+}
+
+// ---------- 出装推荐（主源 arammeta 胜率统计；cchappy 为兜底） ----------
+async function renderBuilds(name) {
+  const el = $('builds'); if (!el) return;
+  const pc = x => x == null ? '--' : (x * 100).toFixed(1) + '%';
+  const gs = g => g >= 10000 ? (g / 10000).toFixed(1) + '万场' : g >= 1000 ? (g / 1000).toFixed(1) + '千场' : (g || 0) + '场';
+  const itip = it => tipAttr({ icon: it.icon, name: it.name, sub: it.price ? it.price + ' 金币' : '', desc: it.desc, stats: it.wr != null ? [['胜率', pc(it.wr)], ['场次', gs(it.games)]] : [] });
+  const bi = it => `<span class="bi" ${itip(it)}><img loading="lazy" decoding="async" src="${esc(it.icon)}" alt="" onerror="this.remove()"></span>`;
+  const sec = (icon, title, sub, body, cls) => body ? `<div class="bs ${cls || ''}"><div class="bh">${ic(icon)}<b>${title}</b>${sub ? `<small>${sub}</small>` : ''}</div>${body}</div>` : '';
+  const combos = (arr, bad) => (arr && arr.length) ? `<div class="cb-grid">${arr.map((c, i) => `<div class="cb${!bad && i === 0 ? ' best' : ''}${bad ? ' bad' : ''}">${bad ? '' : `<span class="cb-rk">${i === 0 ? '最佳' : '#' + (i + 1)}</span>`}<div class="cb-items">${c.items.map(bi).join('<i class="pl">+</i>')}</div><div class="cb-wr"><b>${pc(c.wr)}</b><small>${gs(c.games)}${c.lift != null ? ` · <span class="up">+${(c.lift * 100).toFixed(1)}pp 提升</span>` : ''}</small></div><div class="cb-nm">${esc(c.items.map(it => it.name).join(' + '))}</div></div>`).join('')}</div>` : '';
+  const tiles = arr => (arr && arr.length) ? `<div class="tl-grid">${arr.map(it => `<div class="tl" ${itip(it)}><span class="bi"><img loading="lazy" decoding="async" src="${esc(it.icon)}" alt="" onerror="this.remove()"></span><div class="tl-t"><b>${esc(it.name)}</b><small>${gs(it.games)}</small><div class="tl-bar"><i style="width:${Math.max(6, Math.min(100, ((it.wr || .5) - .45) / .15 * 100))}%"></i></div></div><span class="tl-w">${pc(it.wr)}</span></div>`).join('')}</div>` : '';
+  const spells = arr => (arr && arr.length) ? `<div class="sp-grid">${arr.map(s => `<div class="sp">${s.icon ? `<span class="bi" style="width:34px;height:34px"><img src="${esc(s.icon)}" alt=""></span>` : ''}<b>${esc(s.name)}</b>${s.wr != null ? `<span>${pc(s.wr)}</span><small>${gs(s.games)}</small>` : ''}</div>`).join('')}</div>` : '';
+  const skills = a => (a && a.length) ? `<div class="sk">技能加点 · 主 <b>${esc(a[0])}</b>${a[1] ? ` 副 <b>${esc(a[1])}</b>` : ''}</div>` : '';
+  try {
+    const b = await api(`/api/builds?name=${encodeURIComponent(name)}`);
+    if (!b || b.none) { el.innerHTML = '<span class="stat">暂无出装数据</span>'; return; }
+    const sr = $('bsrc'); if (sr) sr.textContent = (b.source === 'arammeta' ? '胜率统计 · 台服对局' : '人工攻略 · 非胜率统计') + (b.stale ? ' · 离线快照' : '');
+    const traps = (b.traps && b.traps.length) ? sec('skull', '陷阱海克斯', '别拿', `<div class="trap-row">${b.traps.map(t => {
+      const a = S.augById && S.augById.get(t.id), nm = t.name || (a && a.name) || '', icon = a && a.icon, desc = (S.augDesc || {})[nm] || (a && a.desc);
+      return `<span class="trap" ${tipAttr({ icon, name: nm, sub: '陷阱海克斯', desc })}>${icon ? `<img loading="lazy" decoding="async" src="${esc(icon)}" alt="" onerror="this.remove()">` : ''}${esc(nm)}</span>`;
+    }).join('')}</div>`, 'bad') : '';
+    let body = '';
+    if (b.source === 'arammeta') {
+      body = sec('crown', '出装组合', '胜率最高', combos(b.combos)) + sec('sword', '单件装备胜率', '悬停查看介绍', tiles(b.singles)) + sec('footprints', '鞋子', '', tiles(b.boots)) +
+        sec('zap', '召唤师技能', '', spells(b.spells)) + sec('skull', '低胜率组合', '避坑', combos(b.badCombos, true), 'bad');
+    } else {
+      const grp = (t, arr) => sec('sword', t, '', (arr && arr.length) ? `<div class="tl-grid">${arr.map(it => `<div class="tl" ${itip(it)}><span class="bi"><img loading="lazy" decoding="async" src="${esc(it.icon)}" alt="" onerror="this.remove()"></span><div class="tl-t"><b>${it.qty ? `<span class="qty">${it.qty}×</span>` : ''}${esc(it.name)}</b>${it.price ? `<small>${it.price} 金币</small>` : ''}</div></div>`).join('')}</div>` : '');
+      body = grp('出门装', b.starting) + grp('核心装', b.core) + grp('备选', b.optional) + sec('zap', '召唤师技能', '', spells(b.spells)) + (b.guide ? `<div class="stat" style="margin-top:12px">方案：${esc(b.guide)}</div>` : '');
+    }
+    el.innerHTML = (b.stale ? '<div class="bsnote">离线快照数据，可能滞后</div>' : '') + body + skills(b.skills) + traps;
+  } catch (e) { el.innerHTML = '<span class="stat">出装数据获取失败</span>'; }
 }
 
 // ---------- 屏幕捕获 / 悬浮窗 ----------
@@ -481,54 +1004,264 @@ async function startCapture() {
     const st = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 5 }, audio: false });
     S.stream = st; const v = $('capVideo'); v.srcObject = st; v.play().catch(() => {});
     $('capBox').classList.add('on'); $('capStop').disabled = false;
-    st.getVideoTracks()[0].addEventListener('ended', stopCapture);
-    toast('已开始共享，点「截取并识别」即可');
+    st.getVideoTracks()[0].addEventListener('ended', () => { S.shareDropped = true; stopCapture(); });
+    toast('已连接游戏窗口'); $('scan').classList.add('live');
+    $('liveSub').textContent = '已连接：' + (st.getVideoTracks()[0].label || '游戏窗口') + '。在悬浮窗里点「识别」，或在这里点「截取并识别」';
+    $('liveGo').innerHTML = ic('picture-in-picture-2') + '重新打开悬浮窗';
   } catch { toast('已取消共享'); }
 }
 function stopCapture() {
-  if (S.stream) S.stream.getTracks().forEach(t => t.stop());
-  S.stream = null; $('capVideo').srcObject = null; $('capBox').classList.remove('on'); $('capStop').disabled = true;
+  const st = S.stream; S.stream = null;
+  if (st) st.getTracks().forEach(t => { try { t.stop(); } catch {} }); $('capVideo').srcObject = null; $('capBox').classList.remove('on'); $('capStop').disabled = true;
+  stopAuto(); if (S.pipAuto) S.pipAuto.checked = false;
+  $('scan').classList.remove('live'); $('liveSub').innerHTML = S.defSub || DEFAULT_SUB; $('liveGo').innerHTML = ic('picture-in-picture-2') + '一键悬浮识别';
+  if (S.shareDropped) { S.shareDropped = false; toast('共享已断开，点「一键悬浮识别」重新连接'); }
+}
+function cropFrame(src, W, H, useCrop) {
+  const mode = $('cropSel').value, c = (useCrop && CROPS[mode]) || CROPS.full;
+  let x = W * c[0], w = W * c[2]; const y = H * c[1], h = H * c[3];
+  if (useCrop && mode !== 'full' && W / H > 2.2) { w = H * 2; x = (W - w) / 2; }
+  const fc = document.createElement('canvas'); fc.width = Math.round(w); fc.height = Math.round(h);
+  fc.getContext('2d').drawImage(src, x, y, w, h, 0, 0, fc.width, fc.height);
+  return fc;
 }
 async function grabFrame() {
   const tr = S.stream && S.stream.getVideoTracks()[0]; if (!tr) return false;
   let src, W, H;
   if ('ImageCapture' in window) { try { src = await new ImageCapture(tr).grabFrame(); W = src.width; H = src.height; } catch {} }  // 后台标签页也能取帧
   if (!src) { const v = $('capVideo'); if (!v.videoWidth) return false; src = v; W = v.videoWidth; H = v.videoHeight; }
-  const [cx, cy, cw, ch] = CROPS[$('cropSel').value], sw = W * cw, sh = H * ch, sc = Math.min(1, 1280 / sw);
-  const cv = document.createElement('canvas'); cv.width = Math.round(sw * sc); cv.height = Math.round(sh * sc);
-  cv.getContext('2d').drawImage(src, W * cx, H * cy, sw, sh, 0, 0, cv.width, cv.height);
-  shotDataUrl = cv.toDataURL('image/jpeg', 0.82);
+  const fc = cropFrame(src, W, H, true); S.fullFrame = fc;   // 原始分辨率，给本地识别
+  const sw = fc.width, sh = fc.height, sc = Math.min(1, 1280 / sw), cv = document.createElement('canvas'); cv.width = Math.round(sw * sc); cv.height = Math.round(sh * sc);
+  cv.getContext('2d').drawImage(fc, 0, 0, cv.width, cv.height);
+  shotDataUrl = cv.toDataURL('image/jpeg', 0.82);   // 缩小版：预览 + AI 兜底用
   const pv = $('shotPreview'); pv.src = shotDataUrl; pv.style.display = 'block';
   return true;
 }
-async function captureAndRun() {
-  if (!S.stream) return toast('请先在主页面点「选择游戏窗口」授权一次');
-  if (!(await grabFrame())) return toast('还没拿到画面，请稍后再试');
-  $('ocrGo').click();
+async function captureAndRun(silent) {
+  if (!S.stream) { toast('请先点「一键悬浮识别」并选择游戏窗口'); return false; }
+  if ($('ocrGo').disabled) return false;
+  if (!(await grabFrame())) { if (!silent) toast('还没拿到画面，请稍后再试'); return false; }
+  S.silent = !!silent;
+  try { await runOcr(); } finally { S.silent = false; }
+  return S.lastOcrOk;
 }
-$('capStart').onclick = startCapture; $('capStop').onclick = stopCapture; $('capGo').onclick = captureAndRun;
+$('capStop').onclick = stopCapture; $('capGo').onclick = () => captureAndRun(false); $('liveGo').onclick = liveStart;
 
+
+// ---------- 清除按钮 ----------
+// 清空英雄 → 下面所有内容联动清空（卡片、本局已选、A/B/C、候选预览、推荐结果）
+function resetAll() {
+  S.seq++; S.heroAuto = false; S.heroCand = null; syncPipChamp('');
+  $('champInput').value = ''; $('champClear').classList.remove('show');
+  $('champDrop').classList.remove('open'); $('champCard').innerHTML = '';
+  S.picked = []; renderPicked();
+  [0, 1, 2].forEach(i => $('aug' + i).value = '');
+  renderCands(); $('out').innerHTML = '<div class="stat">选好英雄和候选后，结果会出现在这里。</div>';
+}
+$('champInput').addEventListener('input', e => $('champClear').classList.toggle('show', !!e.target.value));
+$('champClear').onclick = () => { resetAll(); toast('已清空，重新选择英雄'); };
+$('shotClear').onclick = () => { shotDataUrl = null; $('shotInput').value = ''; const pv = $('shotPreview'); pv.removeAttribute('src'); pv.style.display = 'none'; $('ocrMsg').textContent = ''; toast('截图已清除'); };
+
+// A/B/C 输入框：清除按钮 + 回车直接推荐
+[0, 1, 2].forEach(i => {
+  const inp = $('aug' + i), clr = $('augClear' + i);
+  clr.onclick = () => { inp.value = ''; clr.classList.remove('show'); renderCands(); inp.focus(); };
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !$('drop' + i).classList.contains('open')) { e.preventDefault(); $('go').click(); }
+  });
+  inp.addEventListener('input', e => clr.classList.toggle('show', !!e.target.value));
+});
+
+// ---------- 设置面板（jev 配置入口） ----------
+$('tokenInput').value = localStorage.getItem('hextech_token') || '';
+$('setBtn').onclick = e => { e.stopPropagation(); $('setPop').classList.toggle('open'); };
+document.addEventListener('click', e => { if (!$('setPop').contains(e.target) && !$('setBtn').contains(e.target)) $('setPop').classList.remove('open'); });
+$('tokenSave').onclick = () => { const v = $('tokenInput').value.trim(); TOKEN = v; if (v) localStorage.setItem('hextech_token', v); else localStorage.removeItem('hextech_token'); toast(v ? '令牌已保存' : '令牌已清空'); };
+$('tokenClear').onclick = () => { localStorage.removeItem('hextech_token'); TOKEN = new URLSearchParams(location.search).get('token') || ''; $('tokenInput').value = ''; toast('令牌已清除'); };
+$('tokenEye').onclick = () => { const i = $('tokenInput'), show = i.type === 'password'; i.type = show ? 'text' : 'password'; $('tokenEye').innerHTML = ic(show ? 'eye-off' : 'eye'); };
+document.addEventListener('click', e => { const c = e.target.closest('code[data-copy]'); if (c) { navigator.clipboard && navigator.clipboard.writeText(c.textContent); toast('已复制 ' + c.textContent); } });
+{ const cs = $('cropSel'); cs.value = localStorage.getItem('hextech_crop') || 'band'; cs.onchange = () => localStorage.setItem('hextech_crop', cs.value); }
+{ const els = document.querySelectorAll('.step,.panel,.rail,#out');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .05 });
+    els.forEach(el => { el.classList.add('rv'); io.observe(el); });
+  } }
+{ let raf = 0; document.addEventListener('pointermove', e => { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; const s = document.documentElement.style; s.setProperty('--cx', e.clientX + 'px'); s.setProperty('--cy2', e.clientY + 'px'); }); }); }
+
+// ---------- v3：一键悬浮识别 / 自动监测 / 悬浮窗 ----------
+const DEFAULT_SUB = '点一次，分享「整个屏幕」：选人界面自动识别英雄，对局中出卡/刷新自动识别推荐，全程不用再点（本地识别，不耗 AI 额度）';
+async function liveStart() {
+  getOcrWorker().catch(() => {});   // 提前下载识别引擎，选完窗口就能直接用
+  if (S.stream) { await openPip().catch(e => toast('悬浮窗失败：' + e.message)); return; }
+  if (!$('champInput').value.trim()) toast('先选好英雄，识别时才知道用谁的数据');
+  const pip = openPip().catch(e => toast('悬浮窗失败：' + e.message));   // 与 getDisplayMedia 在同一次点击内发起，避免手势失效
+  await startCapture();
+  await pip;
+  if (S.pipMsg) S.pipMsg.textContent = S.stream ? '已连接，持续监测中…' : '未选择窗口';
+  if (S.stream && S.pipAuto && !S.pipAuto.checked) { S.pipAuto.checked = true; setAuto(true); toast('已开启持续监测：出卡/刷新自动识别'); }
+}
+function stopAuto() { clearTimeout(S.autoT); S.autoT = null; }
+function setAuto(on) {
+  stopAuto(); S.autoN = 0; S.lastSig = null; S.heroCand = null;
+  if (!on) return;
+  if (!S.stream) { toast('请先选择游戏窗口'); if (S.pipAuto) S.pipAuto.checked = false; return; }
+  const loop = async () => {
+    if (!S.autoT) return;
+    if (!S.tickBusy) {
+      S.tickBusy = true;
+      try { await autoTick(); } finally { S.tickBusy = false; }
+    }
+    if (S.autoT) S.autoT = setTimeout(loop, S.lastSig ? 8000 : 4000);  // 选人阶段 4s 更快跟上换英雄
+  };
+  S.autoT = setTimeout(loop, 500);
+}
+async function autoTick() {
+  if (!S.autoT) return;
+  if (++S.autoN > 200) { stopAuto(); if (S.pipAuto) S.pipAuto.checked = false; toast('持续监测已达上限（约27分钟），可重新勾选继续'); return; }
+  await captureAndRun(true);
+}
 async function openPip() {
-  if (!('documentPictureInPicture' in window)) return toast('当前浏览器不支持悬浮窗（需 Chrome / Edge 116+）');
-  const w = await documentPictureInPicture.requestWindow({ width: 340, height: 260 });
+  if (!('documentPictureInPicture' in window)) { toast('浏览器不支持悬浮窗（需 Chrome / Edge 116+），请用页内「截取并识别」'); return; }
+  if (S.pip && !S.pip.closed) { S.pip.focus(); return; }
+  const w = await documentPictureInPicture.requestWindow({ width: 320, height: 300 });
+  S.pip = w;
   [...document.styleSheets].forEach(ss => { try { const st = w.document.createElement('style'); st.textContent = [...ss.cssRules].map(r => r.cssText).join(' '); w.document.head.appendChild(st); } catch {} });
-  w.document.body.className = 'pip';
-  w.document.body.innerHTML = `<div class="pipbox"><button class="btn gold" id="pipGo">${ic('scan-line')}截取并识别</button><div id="pipMsg" class="stat">${S.stream ? '就绪' : '请先在主页面选择游戏窗口'}</div><div id="pipRes" class="cands" style="margin:0"></div></div>`;
-  w.document.getElementById('pipGo').onclick = captureAndRun;
-  w.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key.toLowerCase() === 'r') captureAndRun(); });
-  S.pipMsg = w.document.getElementById('pipMsg'); S.pipRes = w.document.getElementById('pipRes');
-  w.addEventListener('pagehide', () => { S.pipMsg = S.pipRes = null; });
+  const d = w.document;
+  d.body.className = 'pip';
+  d.body.innerHTML = `<div class="pipbox"><div class="pip-top"><span class="pip-dot"></span><span id="pipMsg" class="stat">${S.stream ? '已连接，点「识别」' : '等待选择游戏窗口…'}</span><span class="sp"></span><button id="pipSnd" class="pip-ico" title="新卡提示音开/关">🔊</button><button id="pipFold" class="pip-ico" title="折叠/展开">−</button></div>
+    <div id="pipBody">
+    <div class="pip-hero"><input id="pipChamp" placeholder="英雄：自动识别，可手动输入（支持拼音）" autocomplete="off"><div id="pipChampDrop" class="drop"></div></div>
+    <button class="btn gold xl" id="pipGo">${ic('scan-line')}识别</button>
+    <label class="auto"><input type="checkbox" id="pipAuto"><span>持续监测（选人4秒/对局8秒，有新卡自动识别）</span></label>
+    <div id="pipRes" class="pipres"></div></div></div>`;
+  d.getElementById('pipGo').onclick = () => { try { S._ac = S._ac || new (window.AudioContext || window.webkitAudioContext)(); if (S._ac.state === 'suspended') S._ac.resume(); } catch (e) {} captureAndRun(false); };
+  d.getElementById('pipFold').onclick = () => {
+    const b = d.getElementById('pipBody'), folded = b.style.display !== 'none';
+    b.style.display = folded ? 'none' : 'grid'; d.getElementById('pipFold').textContent = folded ? '+' : '−'; S.pipFolded = folded;
+  };
+  d.getElementById('pipSnd').onclick = () => { S.pipMuted = !S.pipMuted; d.getElementById('pipSnd').textContent = S.pipMuted ? '🔇' : '🔊'; };
+  S.pipAuto = d.getElementById('pipAuto'); S.pipAuto.onchange = () => setAuto(S.pipAuto.checked);
+  S.pipMsg = d.getElementById('pipMsg'); S.pipRes = d.getElementById('pipRes');
+  S.pipChamp = d.getElementById('pipChamp');
+  S.pipChamp.value = $('champInput').value;
+  pipChampSearch(d);
+  S.pipChamp.addEventListener('change', () => applyPipChamp());
+  w.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key.toLowerCase() === 'r') captureAndRun(false); });
+  w.addEventListener('pagehide', () => { stopAuto(); S.pip = S.pipMsg = S.pipRes = S.pipAuto = S.pipChamp = null; });
+}
+function syncPipChamp(v) { if (S.pipChamp) S.pipChamp.value = v || ''; }
+function applyPipChamp() {
+  if (!S.pipChamp) return;
+  const v = S.pipChamp.value.trim();
+  if (!v || v === $('champInput').value.trim()) return;
+  $('champInput').value = v; S.heroAuto = false; S.heroCand = null;
+  const h = S.champions.find(x => x.name === v);
+  if (h) selectChampion(h);
+  toast(`已手动指定英雄：${v}`);
+}
+function pipBeep() {
+  if (S.pipMuted) return;
+  try {
+    S._ac = S._ac || new (window.AudioContext || window.webkitAudioContext)();
+    if (S._ac.state === 'suspended') { S._ac.resume(); return; }  // 未经手势解锁时不硬播
+    const t = S._ac.currentTime;
+    [523, 784].forEach((f, i) => {
+      const o = S._ac.createOscillator(), g = S._ac.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t + i * 0.18);
+      g.gain.exponentialRampToValueAtTime(0.22, t + i * 0.18 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.18 + 0.16);
+      o.connect(g); g.connect(S._ac.destination);
+      o.start(t + i * 0.18); o.stop(t + i * 0.18 + 0.2);
+    });
+  } catch (e) {}
+}
+// 静默监测发现新卡：自动展开 + 金框闪烁 + 提示音，高亮提醒选海克斯
+function pipAlert() {
+  if (!S.pip) return;
+  try {
+    const d = S.pip.document, b = d.getElementById('pipBody');
+    if (b && b.style.display === 'none') { b.style.display = 'grid'; d.getElementById('pipFold').textContent = '−'; S.pipFolded = false; }
+    const box = d.querySelector('.pipbox');
+    if (box) { box.classList.remove('flash'); void box.offsetWidth; box.classList.add('flash'); }
+    pipBeep();
+  } catch (e) {}
+}
+// 悬浮窗内英雄搜索：中文 / 称号 / 英文别名 / 拼音（与主页同逻辑）
+function pipChampSearch(d) {
+  const input = d.getElementById('pipChamp'), drop = d.getElementById('pipChampDrop');
+  let hits = [], idx = -1;
+  const close = () => { drop.classList.remove('open'); idx = -1; };
+  const paint = () => [...drop.children].forEach((c, i) => c.classList.toggle('on', i === idx));
+  const pick = h => { input.value = h.name; close(); applyPipChamp(); };
+  input.addEventListener('input', () => {
+    const raw = input.value.trim(), q = raw.toLowerCase(), qp = q.replace(/\s+/g, '');
+    if (!q) { close(); return; }
+    hits = S.champions
+      .filter(x => x.name.toLowerCase().includes(q) || (x.title && x.title.includes(raw)) ||
+        (x.alias && x.alias.toLowerCase().includes(q)) || (x._py && x._py.includes(qp)))
+      .map(x => ({ x, r: x.name.toLowerCase().startsWith(q) ? 0 : (x._py && x._py.split(' ').some(w => w.startsWith(qp))) ? 1 : 2 }))
+      .sort((a, b) => a.r - b.r).slice(0, 8).map(o => o.x);
+    drop.innerHTML = '';
+    hits.forEach(h => {
+      const el = d.createElement('div'); el.className = 'opt';
+      el.innerHTML = `<span>${esc(h.name)}${h.title ? ' · ' + esc(h.title) : ''}</span>`;
+      el.onmousedown = e => { e.preventDefault(); pick(h); };
+      drop.appendChild(el);
+    });
+    idx = hits.length ? 0 : -1; paint();
+    drop.classList.toggle('open', hits.length > 0);
+  });
+  input.addEventListener('keydown', e => {
+    if (!drop.classList.contains('open')) return;
+    if (e.key === 'ArrowDown') { idx = (idx + 1) % hits.length; paint(); e.preventDefault(); }
+    else if (e.key === 'ArrowUp') { idx = (idx - 1 + hits.length) % hits.length; paint(); e.preventDefault(); }
+    else if (e.key === 'Enter' && idx >= 0) { pick(hits[idx]); e.preventDefault(); }
+    else if (e.key === 'Escape') close();
+  });
+  input.addEventListener('blur', () => setTimeout(close, 150));
 }
 function pipNotify(r) {
   if (!S.pipRes) return;
-  S.pipMsg.textContent = r.degraded ? '已降档为纯胜率排序' : '识别完成';
-  S.pipRes.innerHTML = r.ranking.map(x => `<span class="cc${x.name === r.pick ? ' best' : ''}">${x.name === r.pick ? ic('crown') : ''}${esc(x.name)} <b>${pct(x.eff != null ? x.eff : (x.champWr != null ? x.champWr : x.globalWr))}</b></span>`).join('');
+  S.pipMsg.textContent = (r.degraded ? '已降档为纯胜率排序' : '识别完成') + ' · 点候选记为已选';
+  S.pipRes.innerHTML = r.ranking.map(x => `<button class="cc${x.name === r.pick ? ' best' : ''}" data-n="${esc(x.name)}">${x.name === r.pick ? ic('crown') : ''}${esc(x.name)} <b>${pct(x.eff != null ? x.eff : (x.champWr != null ? x.champWr : x.globalWr))}</b></button>`).join('');
+  S.pipRes.querySelectorAll('.cc').forEach(b => { b.onclick = () => markPicked(b.dataset.n, true); });
 }
-$('pipBtn').onclick = () => openPip().catch(e => toast('悬浮窗失败：' + e.message));
+function markPicked(n, fromPip) {
+  if (!S.picked.includes(n)) S.picked.push(n);
+  renderPicked();
+  [0, 1, 2].forEach(i => $('aug' + i).value = ''); renderCands();
+  $('out').innerHTML = `<div class="stat">已记录「${esc(n)}」，输入下一轮候选继续。</div>`;
+  toast('已记入本局已选');
+  if (S.pipRes) S.pipRes.innerHTML = `<div class="stat">已记录「${esc(n)}」，等待下一轮…</div>`;
+  if (S.pipAuto && S.pipAuto.checked) setAuto(true);
+  if (!fromPip) window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ---------- v3：设置面板细节 / 动效 ----------
+$('tokenEye').onclick = () => { const i = $('tokenInput'), show = i.type === 'password'; i.type = show ? 'text' : 'password'; $('tokenEye').innerHTML = ic(show ? 'eye-off' : 'eye'); };
+document.addEventListener('click', e => { const c = e.target.closest('code[data-copy]'); if (c) { navigator.clipboard && navigator.clipboard.writeText(c.textContent); toast('已复制 ' + c.textContent); } });
+{ const cs = $('cropSel'); cs.value = localStorage.getItem('hextech_crop') || 'band'; cs.onchange = () => localStorage.setItem('hextech_crop', cs.value); }
+{ const els = document.querySelectorAll('.step,.panel,.rail,#out');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .05 });
+    els.forEach(el => { el.classList.add('rv'); io.observe(el); });
+  } }
+{ let raf = 0; document.addEventListener('pointermove', e => { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; const s = document.documentElement.style; s.setProperty('--cx', e.clientX + 'px'); s.setProperty('--cy2', e.clientY + 'px'); }); }); }
+
+// ---------- v4：悬浮介绍卡 ----------
+const tipHtml = o => `<div class="tp-h">${o.icon ? `<img src="${esc(o.icon)}" alt="">` : ''}<div><b>${esc(o.name)}</b>${o.sub ? `<span>${esc(o.sub)}</span>` : ''}</div></div>${o.desc ? `<div class="tp-d">${esc(o.desc)}</div>` : ''}${o.stats && o.stats.length ? `<div class="tp-s">${o.stats.map(([k, v]) => `<span>${esc(k)}<b>${esc(v)}</b></span>`).join('')}</div>` : ''}`;
+const tipAttr = o => `data-tip="${esc(tipHtml(o))}"`;
+const TIP = document.createElement('div'); TIP.id = 'tip'; document.body.appendChild(TIP);
+document.addEventListener('mouseover', e => { const t = e.target.closest && e.target.closest('[data-tip]'); if (t) { TIP.innerHTML = t.dataset.tip; TIP.classList.add('on'); } });
+document.addEventListener('mousemove', e => { if (!TIP.classList.contains('on')) return; const w = TIP.offsetWidth, h = TIP.offsetHeight; let x = e.clientX + 16, y = e.clientY + 16; if (x + w > innerWidth - 8) x = e.clientX - w - 16; if (y + h > innerHeight - 8) y = e.clientY - h - 16; TIP.style.transform = `translate(${Math.max(8, x)}px,${Math.max(8, y)}px)`; });
+document.addEventListener('mouseout', e => { const t = e.target.closest && e.target.closest('[data-tip]'); if (t && !t.contains(e.relatedTarget)) TIP.classList.remove('on'); });
+document.addEventListener('click', e => { const b = e.target.closest('.how'); if (b) $('how' + b.dataset.how).classList.toggle('open'); });
 
 hydrate();
 init().catch(e => { $('out').innerHTML = `<div class="warn">初始化失败：${esc(e.message)}</div>`; });
 </script>
 </body>
 </html>
+
 

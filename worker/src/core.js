@@ -96,3 +96,13 @@ export function extractPick(data, rowCount) {
   }
   return { pick: pick.choice ?? null, confidence: pick.confidence ?? null, distribution: pick.probabilities ?? null, ranking, usage: data.usage ?? null };
 }
+
+// 清洗 RESG 海克斯描述：去掉 <crit> 等游戏标签、<br>、%i:xxx% 图标占位
+export function cleanDesc(s) {
+  return String(s || '')
+    .replace(/<br\s*\/?>/gi, ' ')
+    .replace(/%i:[a-zA-Z]+%/g, '')
+    .replace(/<\/?[a-zA-Z][^>]*>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}

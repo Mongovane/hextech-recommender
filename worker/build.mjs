@@ -8,8 +8,8 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)));
 const read = (p) => readFileSync(join(root, p), 'utf8');
 
-// 依赖顺序：core → resg → recommend → ocr → index
-const order = ['src/core.js', 'src/resg.js', 'src/recommend.js', 'src/ocr.js', 'src/index.js'];
+// 依赖顺序：core → resg → arammeta → items → builds → recommend → ocr → index
+const order = ['src/core.js', 'src/resg.js', 'src/arammeta.js', 'src/items.js', 'src/builds.js', 'src/recommend.js', 'src/ocr.js', 'src/index.js'];
 let out = '';
 for (const f of order) {
   let code = read(f);

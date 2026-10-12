@@ -14,6 +14,10 @@ export async function resgFetch(path) {
 }
 
 export const ico = (p) => (p ? 'https://resg.top' + p : null);
+// 官方 Data Dragon（静态资源优先走官方）
+export const DD_VER = '16.19.1';
+export const DD = `https://ddragon.leagueoflegends.com/cdn/${DD_VER}`;
+export const champIcon = (alias, fallback) => (alias ? `${DD}/img/champion/${alias}.png` : fallback);
 export function findByQuery(items, q, fields) {
   const s = String(q).trim().toLowerCase();
   return items.find((it) => String(it.id) === s || fields.some((f) => String(it[f] ?? '').toLowerCase() === s));
