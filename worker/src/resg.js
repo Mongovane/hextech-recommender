@@ -1,16 +1,29 @@
-// RESG 数据层：fetch（cf 边缘缓存）+ 查询 + 图标 URL
 import { parseModule } from './core.js';
+// RESG 数据层：fetch（cf 边缘缓存）+ 查询 + 图标 URL
+
 export const RESG = 'https://resg.top/api/v1';
 // ---------------- Worker ----------------
 // caches.default 在 workers.dev 域名下不生效，改用 fetch 的 cf 缓存；versions 列表短缓存以便及时发现新版本
 export async function resgFetch(path) {
   const ttl = path === '/versions.js' ? 600 : 86400;
-  const up = await fetch(RESG + path, {
-    headers: { 'User-Agent': 'resg-jev-worker/0.2' },
-    cf: { cacheEverything: true, cacheTtl: ttl },
-  });
-  if (!up.ok) throw new Error(`RESG ${up.status} ${path}`);
-  return parseModule(await up.text());
+  const cache = (typeof caches !== 'undefined') ? caches.default : null;
+  const key = new Request('https://resg-cache.local' + path);
+  try {
+    const up = await fetch(RESG + path, {
+      headers: { 'User-Agent': 'resg-jev-worker/0.3' },
+      cf: { cacheEverything: true, cacheTtl: ttl },
+    });
+    if (!up.ok) throw new Error(`RESG ${up.status} ${path}`);
+    const data = parseModule(await up.text());
+    if (cache) {
+      cache.put(key, new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json' } })).catch(() => {});
+    }
+    return data;
+  } catch (e) {
+    const hit = cache ? await cache.match(key).catch(() => null) : null;
+    if (hit) return hit.json();
+    throw e;
+  }
 }
 
 export const ico = (p) => (p ? 'https://resg.top' + p : null);

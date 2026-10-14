@@ -1,7 +1,7 @@
+import { champIcon, DD } from './resg.js';
 // arammeta 备用数据源（MIT 开源，台服 LCU 众包真实对局，每日更新）
 // https://arammeta.com/api/tier-list.json — 英雄胜率 + 分稀有度海克斯胜率统计
 // 仅在 RESG 失败时启用；海克斯名/图标用本站 RESG 元数据（简体），数字走 arammeta
-import { champIcon, DD } from './resg.js';
 
 const AM = 'https://arammeta.com/api/tier-list.json';
 const AM_ICON = 'https://arammeta.com/';
@@ -74,8 +74,39 @@ export function arammetaBuilds(detail, ddDict) {
     combos: (items.top || []).slice(0, 3).map(slimCombo),
     badCombos: (items.bot || []).slice(0, 3).map(slimCombo),
     singles: (singles.top || []).slice(0, 8).map(slimSingle),
-    boots: (boots.top || []).slice(0, 3).map(slimSingle),
-    spells: (spells.top || []).slice(0, 2).map((s) => ({ name: s.name_zh, wr: s.wr ?? null, games: s.g ?? 0 })),
+    boots: (() => {
+      const rawB = (boots.top || []).map(slimSingle);
+      const stdB = rawB.filter(x => !String(x.name || '').includes('暴食'));
+      const listB = stdB.length ? stdB : rawB;
+      const maxG = Math.max(1, ...listB.map(x => x.games || 0));
+      const mainB = listB.filter(x => (x.games || 0) >= maxG * 0.2);
+      const poolB = mainB.length ? mainB : listB;
+      poolB.sort((a, b) => (b.games || 0) - (a.games || 0));
+      return poolB.slice(0, 3);
+    })(),
+    spells: (spells.top || []).slice(0, 2).map((s) => {
+      const SMAP = {
+        '閃現': ['闪现', 'SummonerFlash.png'], '闪现': ['闪现', 'SummonerFlash.png'], 'Flash': ['闪现', 'SummonerFlash.png'],
+        '鬼步': ['疾跑', 'SummonerHaste.png'], '疾跑': ['疾跑', 'SummonerHaste.png'], '幽灵疾步': ['疾跑', 'SummonerHaste.png'], '幽靈疾步': ['疾跑', 'SummonerHaste.png'], 'Ghost': ['疾跑', 'SummonerHaste.png'],
+        '標記': ['标记', 'SummonerSnowball.png'], '标记': ['标记', 'SummonerSnowball.png'], '雪球': ['标记', 'SummonerSnowball.png'], 'Mark': ['标记', 'SummonerSnowball.png'],
+        '點燃': ['点燃', 'SummonerDot.png'], '点燃': ['点燃', 'SummonerDot.png'], '引燃': ['点燃', 'SummonerDot.png'], 'Ignite': ['点燃', 'SummonerDot.png'],
+        '治療': ['治疗', 'SummonerHeal.png'], '治癒': ['治疗', 'SummonerHeal.png'], '治愈': ['治疗', 'SummonerHeal.png'], '治疗': ['治疗', 'SummonerHeal.png'], '治疗术': ['治疗', 'SummonerHeal.png'], '治療術': ['治疗', 'SummonerHeal.png'], 'Heal': ['治疗', 'SummonerHeal.png'],
+        '虛弱': ['虚弱', 'SummonerExhaust.png'], '虚弱': ['虚弱', 'SummonerExhaust.png'], 'Exhaust': ['虚弱', 'SummonerExhaust.png'],
+        '屏障': ['屏障', 'SummonerBarrier.png'], '光盾': ['屏障', 'SummonerBarrier.png'], 'Barrier': ['屏障', 'SummonerBarrier.png'],
+        '傳送': ['传送', 'SummonerTeleport.png'], '传送': ['传送', 'SummonerTeleport.png'], 'Teleport': ['传送', 'SummonerTeleport.png'],
+        '懲戒': ['惩戒', 'SummonerSmite.png'], '惩戒': ['惩戒', 'SummonerSmite.png'], 'Smite': ['惩戒', 'SummonerSmite.png'],
+        '淨化': ['净化', 'SummonerBoost.png'], '净化': ['净化', 'SummonerBoost.png'], 'Cleanse': ['净化', 'SummonerBoost.png'],
+        '清晰': ['清晰', 'SummonerMana.png'], '清晰術': ['清晰', 'SummonerMana.png'], '清晰术': ['清晰', 'SummonerMana.png'], 'Clarity': ['清晰', 'SummonerMana.png']
+      };
+      const parts = String(s.name_zh || '').split('+').map(p => p.trim()).filter(Boolean);
+      const names = [], icons = [];
+      for (const p of parts) {
+        const hit = SMAP[p];
+        names.push(hit ? hit[0] : p);
+        if (hit) icons.push(`${DD}/img/spell/${hit[1]}`);
+      }
+      return { name: names.join(' + ') || s.name_zh, icon: icons.length === 1 ? icons[0] : '', icons, wr: s.wr ?? null, games: s.g ?? 0 };
+    }),
   };
 }
 
@@ -84,7 +115,7 @@ export function arammetaChampions(data) {
   const out = [];
   for (const [id, c] of Object.entries(data?.champs || {})) {
     out.push({
-      id: +id, name: c.name_zh || c.name_en, title: '', alias: c.alias || null,
+      id: +id, name: c.name_zh || c.name_en, title: c.name_zh || c.name_en || '', alias: c.alias || null,
       wr: c.wr ?? null, tm: c.g ?? 0, tier: null,
       icon: champIcon(c.alias, null),
     });

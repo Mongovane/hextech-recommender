@@ -1,6 +1,8 @@
-// 推荐：jev 决策 + 本地降级 + 英雄详情
 import { buildCandidateContextData, buildState, buildJevBody, buildConflictBody, extractPick, effWr, getBalanceTone } from './core.js';
 import { resgFetch, findByQuery, latestVersion, ico, champIcon } from './resg.js';
+// 推荐：jev 决策 + 本地降级 + 英雄详情
+
+
 export const JEV = 'https://api.typesafe.ai/v1/systemone';
 export async function jevCall(env, body) {
   const jr = await fetch(JEV, {

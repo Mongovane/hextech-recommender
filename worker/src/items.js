@@ -1,7 +1,8 @@
-// 官方 Data Dragon 装备字典：名称/价格/描述/图标以官方为准
-// item.json 约 700KB，精简后经 Cache API + 内存缓存，只拉一次
 import { cleanDesc } from './core.js';
 import { DD } from './resg.js';
+// 官方 Data Dragon 装备字典：名称/价格/描述/图标以官方为准
+// item.json 约 700KB，精简后经 Cache API + 内存缓存，只拉一次
+
 
 let memDict = null;
 

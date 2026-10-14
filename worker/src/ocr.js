@@ -1,5 +1,6 @@
-// OCR：Workers AI 视觉模型识别三卡片标题 + 模糊匹配标准海克斯名
 import { resgFetch, latestVersion } from './resg.js';
+// OCR：Workers AI 视觉模型识别三卡片标题 + 模糊匹配标准海克斯名
+
 // ---------- OCR ----------
 export const OCR_MODEL = '@cf/meta/llama-4-scout-17b-16e-instruct';
 export const dataUrl = (b64, mime = 'image/jpeg') => { const s = String(b64 || ''); return s.startsWith('data:') ? s : `data:${mime || 'image/jpeg'};base64,${s}`; };
